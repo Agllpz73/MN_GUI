@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}NumMethods{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1 class="hero__title">NumMethods</h1>
+  <p class="hero__subtitle">Sistema interactivo de métodos numéricos</p>
+
+  <div class="hero__badges">
+    <div class="badge">📈 Visualización gráfica</div>
+    <div class="badge">🔁 Proceso iterativo</div>
+    <div class="badge">📊 Análisis comparativo</div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section__title">¿Qué puedes hacer con NumMethods?</h2>
+
+  <div class="cards3">
+    <article class="card">
+      <h3 class="card__title">📈 Visualiza</h3>
+      <p class="card__text">Visualiza gráficamente</p>
+      <ul class="card__list">
+        <li>Funciones</li>
+        <li>Aproximaciones</li>
+        <li>Convergencia</li>
+      </ul>
+    </article>
+
+    <article class="card card--primary">
+      <h3 class="card__title">🔎 Analiza</h3>
+      <p class="card__text">Analiza el comportamiento</p>
+      <ul class="card__list">
+        <li>Iteraciones</li>
+        <li>Error</li>
+        <li>Estabilidad del método</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3 class="card__title">🧮 Compara</h3>
+      <p class="card__text">Compara métodos</p>
+      <ul class="card__list">
+        <li>Diferentes aproximaciones</li>
+        <li>Velocidad de convergencia</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="section section--muted">
+  <h2 class="section__title">Selecciona un método desde el menú superior para comenzar a explorar su comportamiento numérico y su proceso de convergencia.</h2>
+
+  <div class="usecases">
+    <h3 class="usecases__title">Ejemplos de uso</h3>
+    <ul class="usecases__list">
+      <li>Resolución de ecuaciones no lineales</li>
+      <li>Análisis de sistemas de ecuaciones</li>
+      <li>Interpolación y aproximación de datos</li>
+      <li>Integración numérica y EDO</li>
+    </ul>
+
+    <button class="btn btn--primary btn--wide" type="button">Comenzar</button>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section__title">📥 Modalidades de entrada</h2>
+
+  <div class="cards2">
+    <article class="card">
+      <h3 class="card__title">✏️ Uso de Formulario</h3>
+      <ul class="card__list">
+        <li>Ingresa funciones usando notación matemática</li>
+        <li>Usa valores iniciales adecuados</li>
+        <li>Define tolerancia y número de iteraciones</li>
+        <li>Valida campos requeridos</li>
+        <li>Los campos cambian según el método</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <h3 class="card__title">📄 Uso archivo CSV</h3>
+      <ul class="card__list">
+        <li>Encabezados en la primera fila</li>
+        <li>Valores numéricos tipo decimal</li>
+        <li>Evitar caracteres especiales</li>
+        <li>Cada columna representa una variable</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__cols">
+    <div>
+      <h4>Proyecto</h4>
+      <p>NumMethods<br>Versión: v1.0<br>Año: 2026</p>
+    </div>
+    <div>
+      <h4>Uso Académico</h4>
+      <p>Métodos numéricos<br>Visualización de convergencia<br>Análisis iterativo</p>
+    </div>
+    <div>
+      <h4>Información académica</h4>
+      <p>Proyecto Terminal<br>Ingeniería en Computación<br>UAM Azcapotzalco</p>
+    </div>
+  </div>
+  <p class="footer__copy">© 2025 NumMethods — Proyecto académico con fines educativos.</p>
+</footer>
+{% endblock %}

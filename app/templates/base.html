@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}NumMethods{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="{{ url_for('main.home') }}">NumMethods</a>
+
+      <nav class="nav">
+        {% for item in NAV_ITEMS %}
+          {% set is_active = (request.endpoint == item.endpoint) %}
+          <a class="nav__link {{ 'is-active' if is_active else '' }}"
+             href="{{ url_for(item.endpoint) }}">
+            {{ item.label }}
+          </a>
+        {% endfor %}
+      </nav>
+
+      <a class="btn btn--primary" href="#" aria-label="Detalles">Detalles</a>
+    </div>
+  </header>
+
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+
+</body>
+</html>

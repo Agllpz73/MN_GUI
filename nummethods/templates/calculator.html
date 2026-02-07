@@ -1,59 +1,38 @@
-{% block main_class %}calculator-page{% endblock %}
-
 {% extends "base.html" %}
+{% block main_class %}page--wide calculator-page{% endblock %}
 
 {% block content %}
 <section class="calculator">
+  <!-- FILA SUPERIOR -->
+  <div class="calculator-top">
+    <!-- IZQUIERDA -->
+    <div class="left-stack">
+      <aside class="panel panel--inputs">
+        <h2 class="panel__title">Parámetros de entrada</h2>
+        <div id="dynamic-form"></div>
+      </aside>
 
-  <!-- Fila superior -->
-  <div class="calculator__top">
+      <aside class="panel panel--info">
+        <div id="method-info"></div>
+      </aside>
+    </div>
 
-    <!-- Parámetros -->
-    <aside class="panel panel--inputs">
-      <h2 class="panel__title">🔧 PARÁMETROS (DEBUG)</h2>
-
-
-      <!-- AQUÍ SE INYECTA EL FORMULARIO DINÁMICO -->
-      <div id="dynamic-form">
-        <!-- placeholder -->
-      </div>
-    </aside>
-
-    <!-- Gráfica -->
+    <!-- DERECHA -->
     <section class="panel panel--graph">
-      <div id="graph-container">
-        <!-- Canvas / Plotly / SVG -->
-      </div>
+      <div id="graph-container"></div>
     </section>
-
   </div>
 
-  <!-- Fila inferior -->
-  <div class="calculator__bottom">
-
-    <!-- Info del método -->
-    <aside class="panel panel--info">
-      <!-- AQUÍ VA LA TARJETA INFORMATIVA -->
-      <div id="method-info">
-        <!-- placeholder -->
-      </div>
-    </aside>
-
-    <!-- Procedimientos / Resultados -->
+  <!-- FILA INFERIOR -->
+  <div class="calculator-bottom">
     <section class="panel panel--results">
       <h2 class="panel__title">Procedimientos</h2>
-
-      <div id="procedure-output">
-        <!-- iteraciones / tablas / mensajes -->
-      </div>
+      <div id="procedure-output"></div>
     </section>
 
+    <div class="panel panel--keyboard">
+      {% include "partials/math_keyboard.html" %}
+    </div>
   </div>
-
-  <!-- Calculadora matemática -->
-  <div class="calculator__keyboard">
-    {% include "partials/math_keyboard.html" %}
-  </div>
-
 </section>
 {% endblock %}

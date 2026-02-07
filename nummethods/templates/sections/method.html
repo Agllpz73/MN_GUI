@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ method }} | NumMethods{% endblock %}
+{% block content %}
+<section class="section">
+  <h1 class="section__title">
+    {{ category|replace('-', ' ')|title }} — {{ method|replace('-', ' ')|title }}
+  </h1>
+  <p>Aquí irá el formulario/CSV y la salida del método.</p>
+</section>
+{% endblock %}

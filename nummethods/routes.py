@@ -38,3 +38,16 @@ def integration():
 @main_bp.get("/edo")
 def ode():
     return render_template("sections/placeholder.html", title="EDO")
+
+@main_bp.get("/<category>")
+def category(category):
+    # página por categoría (cards, descripción, etc.)
+    return render_template("sections/category.html", category=category)
+
+@main_bp.get("/<category>/<method>")
+def method_view(category, method):
+    # página por método (form + csv + resultados)
+    return render_template("sections/method.html", category=category, method=method)
+@main_bp.get("/calculator-demo")
+def calculator_demo():
+    return render_template("calculator.html")

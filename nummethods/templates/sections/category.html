@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ category }} | NumMethods{% endblock %}
+{% block content %}
+<section class="section">
+  <h1 class="section__title">{{ category|replace('-', ' ')|title }}</h1>
+  <p>Aquí irá la vista de la categoría (cards de métodos, descripción, etc.).</p>
+</section>
+{% endblock %}

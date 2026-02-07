@@ -1,0 +1,59 @@
+{% block main_class %}calculator-page{% endblock %}
+
+{% extends "base.html" %}
+
+{% block content %}
+<section class="calculator">
+
+  <!-- Fila superior -->
+  <div class="calculator__top">
+
+    <!-- Parámetros -->
+    <aside class="panel panel--inputs">
+      <h2 class="panel__title">🔧 PARÁMETROS (DEBUG)</h2>
+
+
+      <!-- AQUÍ SE INYECTA EL FORMULARIO DINÁMICO -->
+      <div id="dynamic-form">
+        <!-- placeholder -->
+      </div>
+    </aside>
+
+    <!-- Gráfica -->
+    <section class="panel panel--graph">
+      <div id="graph-container">
+        <!-- Canvas / Plotly / SVG -->
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Fila inferior -->
+  <div class="calculator__bottom">
+
+    <!-- Info del método -->
+    <aside class="panel panel--info">
+      <!-- AQUÍ VA LA TARJETA INFORMATIVA -->
+      <div id="method-info">
+        <!-- placeholder -->
+      </div>
+    </aside>
+
+    <!-- Procedimientos / Resultados -->
+    <section class="panel panel--results">
+      <h2 class="panel__title">Procedimientos</h2>
+
+      <div id="procedure-output">
+        <!-- iteraciones / tablas / mensajes -->
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Calculadora matemática -->
+  <div class="calculator__keyboard">
+    {% include "partials/math_keyboard.html" %}
+  </div>
+
+</section>
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask import Flask
-from .navigation import NAV_ITEMS
+from .navigation import NAV
 from .routes import main_bp
 
 def create_app():
@@ -8,6 +8,6 @@ def create_app():
 
     @app.context_processor
     def inject_nav():
-        return {"NAV_ITEMS": NAV_ITEMS}
+        return {"NAV": NAV}
 
     return app

@@ -42,5 +42,11 @@
     <main class="{% block main_class %}page{% endblock %}">
       {% block content %}{% endblock %}
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/konva@9.3.6/konva.min.js"></script>
+    <script src="{{ url_for('static', filename='js/graph-konva.js') }}"></script>
+
+
+
+
   </body>
 </html>

@@ -606,3 +606,16 @@ html, body{
 .math-keyboard .enter:hover{
   background: #1e4fd8;
 }
+
+/*Plano cartesiano -- Estilos*/
+
+#graph-container{
+  width: 100%;
+  height: 100%;
+}
+
+#cartesianChart{
+  width: 100%;
+  height: 100%;
+}
+

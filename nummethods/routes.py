@@ -1,5 +1,5 @@
 # app/routes.py
-from flask import Blueprint, render_template
+from flask import Blueprint, abort, render_template
 
 main_bp = Blueprint("main", __name__)
 
@@ -43,11 +43,59 @@ def ode():
 def category(category):
     # página por categoría (cards, descripción, etc.)
     return render_template("sections/category.html", category=category)
-
+"""
 @main_bp.get("/<category>/<method>")
 def method_view(category, method):
     # página por método (form + csv + resultados)
     return render_template("sections/method.html", category=category, method=method)
+"""
+
 @main_bp.get("/calculator-demo")
 def calculator_demo():
     return render_template("calculator.html")
+
+
+# Aquí se colocan la carga de los html
+"""
+"""
+@main_bp.route("/<category>/<method>")
+def method_view(category, method):
+    methods = {
+        "newton-raphson": "methods/newton_raphson.html",
+        "biseccion": "methods/biseccion.html",
+        "secante": "methods/secante.html",
+        "falsa-posicion": "methods/falsa_posicion.html",
+        "punto-fijo": "methods/punto_fijo.html",
+        "newton-raphson": "methods/newton_raphson_Sistema.html",
+        "punto-fijo": "methods/punto_fijo_Sistema.html",
+        "gauss": "methods/gauss.html",
+        "gauss-jordan": "methods/gauss_jordan.html",
+        "matriz-inversa": "methods/matriz_inversa.html",
+        "lu": "methods/lu.html",
+        "cholesky": "methods/cholesky.html",
+        "gauss-seidel": "methods/gauss_seidel.html",
+        "jacobi": "methods/jacobi.html",
+        "lagrange": "methods/lagrange.html",
+        "newton-dd": "methods/newton_divididas.html",
+        "newton-df": "methods/newton_diferencias.html",
+        "minimos-cuadrados": "methods/minimos_cuadrados.html",
+        "mc-transf": "methods/mc_transf.html",
+        "trapecio": "methods/trapecio.html",
+        "simpson-1-3": "methods/simpson_1_3.html",
+        "simpson-3-8": "methods/simpson_3_8.html",
+        "cuadratura-gauss": "methods/cuadratura_gauss.html",
+        "euler": "methods/euler.html",
+        "runge-kutta": "methods/runge_kutta.html",
+        "euler-mejorado": "methods/euler_mejorado.html"
+    }
+
+    if method not in methods:
+        abort(404)
+
+    return render_template(
+        "calculator.html",
+        category=category,   
+        method=method,
+        method_template=methods[method]
+    )
+

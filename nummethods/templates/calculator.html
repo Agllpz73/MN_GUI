@@ -1,7 +1,5 @@
-{% extends "base.html" %}
-{% block main_class %}page--wide calculator-page{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block main_class %}page--wide calculator-page{%
+endblock %} {% block content %}
 <section class="calculator">
   <!-- FILA SUPERIOR -->
   <div class="calculator-top">
@@ -9,20 +7,17 @@
     <div class="left-stack">
       <aside class="panel panel--inputs">
         <h2 class="panel__title">Parámetros de entrada</h2>
-        <div id="dynamic-form"></div>
+        <div id="dynamic-form">
+          {% if method_template %} {% include method_template %} {% endif %}
+        </div>
       </aside>
 
-      <aside class="panel panel--info">
-        <div id="method-info"></div>
-      </aside>
+      
     </div>
 
     <!-- DERECHA -->
     <section class="panel panel--graph">
-      <div id="graph-container">
-        
-
-      </div>
+      <div id="graph-container"></div>
     </section>
   </div>
 

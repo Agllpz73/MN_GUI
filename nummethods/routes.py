@@ -1,5 +1,5 @@
 # app/routes.py
-from flask import Blueprint, abort, render_template
+from flask import Blueprint, abort, app, render_template
 
 main_bp = Blueprint("main", __name__)
 
@@ -43,12 +43,7 @@ def ode():
 def category(category):
     # página por categoría (cards, descripción, etc.)
     return render_template("calculator.html", category=category)
-"""
-@main_bp.get("/<category>/<method>")
-def method_view(category, method):
-    # página por método (form + csv + resultados)
-    return render_template("sections/method.html", category=category, method=method)
-"""
+
 
 @main_bp.get("/calculator-demo")
 def calculator_demo():
@@ -98,5 +93,7 @@ def method_view(category, method):
         category=category,   
         method=method,
         method_template=methods[method]
+        
     )
+
 

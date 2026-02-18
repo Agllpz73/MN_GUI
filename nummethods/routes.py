@@ -1,6 +1,13 @@
 # app/routes.py
 from flask import Blueprint, abort, app, render_template
+from flask import request, jsonify
+from .file_render import read_csv_file
 
+
+"""
+Creación de las rutas para la aplicación, cada ruta corresponde a una categoría o método específico.
+Se utiliza un Blueprint para organizar las rutas relacionadas con la funcionalidad principal de la aplicación.
+"""
 main_bp = Blueprint("main", __name__)
 
 @main_bp.get("/")
@@ -50,8 +57,9 @@ def calculator_demo():
     return render_template("calculator.html")
 
 
-# Aquí se colocan la carga de los html
+# 
 """
+Aquí se colocan la carga dinámica de los html específicos para cada método, se mapea el slug de cada método a su respectiva plantilla.
 """
 @main_bp.route("/<category>/<method>")
 def method_view(category, method):
@@ -96,4 +104,31 @@ def method_view(category, method):
         
     )
 
+"""
+Aquí iniciamos el módulo de carga de archivos.
+Se espera un archivo CSV con el formato adecuado 
+para cada método,que será procesado por la función 
+read_csv_file, se procesa en la API REST y luego
+utilizado en los cálculos numéricos
+"""
+
+
+@main_bp.route("/interpolacion/minimos_cuadrados", methods=["GET", "POST"])
+def minimos_cuadrados():
+
+    if request.method == "POST":
+
+        archivo = request.files.get("archivo")
+
+        if archivo:
+            try:
+                datos = read_csv_file(archivo)
+                # Aquí ya puedes separar X y Y
+            except ValueError as e:
+                return render_template(
+                    "calculator.html",
+                    error=str(e)
+                )
+
+    return render_template("calculator.html")
 

@@ -20,8 +20,8 @@ NAV = [
         "endpoint": "main.category",
         "args": {"category": "sist-ec-no-lineales"},
         "methods": [
-            {"label": "Newton-Raphson", "slug": "newton-raphson"},
-            {"label": "Punto Fijo", "slug": "punto-fijo"},
+            {"label": "Newton-Raphson", "slug": "newton-raphson-sistema"},
+            {"label": "Punto Fijo", "slug": "punto-fijo-sistema"},
         ],
     },
     {

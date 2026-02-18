@@ -1,0 +1,34 @@
+<form method="POST" id="method-form">
+  <label>Función f(x,y):</label>
+  <input type="text" name="fxy" required />
+
+  <label>Valor inicial x₀:</label>
+  <input type="number" step="any" name="x0" required />
+
+  <label>Condición inicial y₀:</label>
+  <input type="number" step="any" name="y0" required />
+
+  <label>Condición final Xf:</label>
+  <input type="number" step="any" name="xf" required />
+
+  <label>Tamaño de peso 'h':</label>
+  <input type="number" step="any" name="h" required />
+
+  <label>Iteraciones máximas:</label>
+  <input type="number" name="max_iter" required />
+
+  <button type="submit">Calcular</button>
+</form>
+<br />
+<div class="method-card">
+  <div class="method-card-header">
+    <div class="method-card-icon">i</div>
+    <h3>Euler Mejorado</h3>
+  </div>
+
+  <p>
+    Variante del <strong>método de Euler</strong> que utiliza una <strong>estimación intermedia</strong> para
+    mejorar la aproximación. Ofrece <strong>mayor precisión</strong> manteniendo un bajo costo
+    computacional.
+  </p>
+</div>

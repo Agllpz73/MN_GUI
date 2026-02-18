@@ -1,0 +1,32 @@
+<form method="POST" id="method-form">
+  <label>Función f(x):</label>
+  <input type="text" name="fx" required />
+
+  <label>Límite inferior a:</label>
+  <input type="number" step="any" name="a" required />
+
+  <label>Límite superior b:</label>
+  <input type="number" step="any" name="b" required />
+
+  <label>Tolerancia (ε):</label>
+  <input type="number" step="any" name="tol" required />
+
+  <label>Iteraciones máximas:</label>
+  <input type="number" name="max_iter" required />
+
+  <button type="submit">Calcular</button>
+</form>
+<br />
+<div class="method-card">
+  <div class="method-card-header">
+    <div class="method-card-icon">i</div>
+    <h3>Simpson 1/3</h3>
+  </div>
+
+  <p>
+    Método de integración numérica que
+    <strong>aproxima el área bajo la curva</strong> mediante polinomios de
+    segundo grado. Ofrece <strong>mayor precisión</strong> que el método del
+    trapecio cuando se cumplen las condiciones adecuadas.
+  </p>
+</div>

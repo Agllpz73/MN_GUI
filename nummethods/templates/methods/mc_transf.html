@@ -1,0 +1,40 @@
+<form method="POST" enctype="multipart/form-data" class="file-form">
+  <label class="form-label">
+    Valores (x,y):
+    <span class="help-icon">?</span>
+  </label>
+
+  <!-- Input real oculto -->
+  <input type="file" id="file-input" name="matrix_file" accept=".csv" hidden />
+
+  <!-- Botón visual personalizado -->
+  <label for="file-input" class="file-upload-btn">
+    Adjunta tu archivo .CSV
+  </label>
+
+  <span id="file-name" class="file-name"></span>
+
+  <label class="form-label">Grado del polinomio:</label>
+  <input
+    type="number"
+    name="interpolation_value"
+    placeholder="ej. 4.3"
+    required
+  />
+
+  <button type="submit" class="primary-btn">Iniciar</button>
+</form>
+<br />
+<div class="method-card">
+  <div class="method-card-header">
+    <div class="method-card-icon">i</div>
+    <h3>M.C con Transformaciones</h3>
+  </div>
+
+  <p>
+    Mínimos Cuadrados con Transformaciones <strong>variante del método de mínimos
+    cuadrados</strong> que aplica transformaciones para ajustar modelos <strong>no lineales</strong>.
+    Permite aproximar datos mediante relaciones exponenciales, logarítmicas u
+    otras.
+  </p>
+</div>

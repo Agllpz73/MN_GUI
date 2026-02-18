@@ -1,0 +1,43 @@
+<form method="POST" enctype="multipart/form-data" class="file-form">
+  <label class="form-label">
+    Sistema de ecuaciones:
+    <span class="help-icon">?</span>
+  </label>
+
+  <!-- Input real oculto -->
+  <input type="file" id="file-input" name="matrix_file" accept=".csv" hidden />
+
+  <!-- Botón visual personalizado -->
+  <label for="file-input" class="file-upload-btn">
+    Adjunta tu archivo .CSV
+  </label>
+
+  <span id="file-name" class="file-name"></span>
+
+  <label class="form-label">Tolerancia (ε):</label>
+  <input
+    type="number"
+    step="any"
+    name="tol"
+    placeholder="ej. 0.0021"
+    required
+  />
+
+  <label class="form-label">Iteraciones máximas:</label>
+  <input type="number" name="max_iter" placeholder="ej. 4" required />
+
+  <button type="submit" class="primary-btn">Iniciar</button>
+</form>
+
+<div class="method-card">
+  <div class="method-card-header">
+    <div class="method-card-icon">i</div>
+    <h3>Punto Fijo</h3>
+  </div>
+
+  <p>
+    Método iterativo que transforma el sistema original en una forma equivalente
+    para aproximar la solución. La <strong>convergencia</strong> depende de la <strong>elección</strong> de la
+    <strong>función iterativa</strong> y del <strong>valor inicial</strong>.
+  </p>
+</div>

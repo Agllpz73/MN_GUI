@@ -1,0 +1,31 @@
+<form method="POST" enctype="multipart/form-data" class="file-form">
+  <label class="form-label">
+    Sistema de ecuaciones:
+    <span class="help-icon">?</span>
+  </label>
+
+  <!-- Input real oculto -->
+  <input type="file" id="file-input" name="matrix_file" accept=".csv" hidden />
+
+  <!-- Botón visual personalizado -->
+  <label for="file-input" class="file-upload-btn">
+    Adjunta tu archivo .CSV
+  </label>
+
+  <span id="file-name" class="file-name"></span>
+
+  <button type="submit" class="primary-btn">Iniciar</button>
+</form>
+<br>
+<div class="method-card">
+  <div class="method-card-header">
+    <div class="method-card-icon">i</div>
+    <h3>Gauss-Jordan</h3>
+  </div>
+
+  <p>
+    Método directo que transforma el sistema en una forma <strong>triangular</strong> mediante
+    <strong>operaciones elementales</strong>. Permite obtener la solución resolviendo el sistema
+    de <strong>manera progresiva</strong>.
+  </p>
+</div>

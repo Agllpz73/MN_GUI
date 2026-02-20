@@ -18,7 +18,7 @@
   <input
     type="number"
     name="interpolation_value"
-    placeholder="ej. 4.3"
+    placeholder="ej. 4"
     required
   />
 
@@ -37,15 +37,45 @@
     una tendencia representativa.
   </p>
 </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="file-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 
-{% if success %}
-    <div class="file-success">
-        Archivo cargado: <strong>{{ filename }}</strong>
-    </div>
-{% endif %}
 
-{% if error %}
-    <div class="file-error">
-        {{ error }}
-    </div>
-{% endif %}
+<script>
+document.getElementById("file-input").addEventListener("change", function() {
+
+    const formData = new FormData();
+    formData.append("matrix_file", this.files[0]);
+
+    fetch("/validate-file", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        const fileNameSpan = document.getElementById("file-name");
+
+        if (data.status === "success") {
+            fileNameSpan.textContent = "Archivo válido: " + data.filename;
+            fileNameSpan.style.color = "green";
+        } else {
+            fileNameSpan.textContent = data.message;
+            fileNameSpan.style.color = "red";
+        }
+    })
+    .catch(() => {
+        const fileNameSpan = document.getElementById("file-name");
+        fileNameSpan.textContent = "Entradas no correctas";
+        fileNameSpan.style.color = "red";
+    });
+
+});
+</script>

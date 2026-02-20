@@ -854,4 +854,22 @@ html, body{
     background: #1d4ed8;
 }
 
+.file-success {
+    margin-top: 8px;
+    padding: 8px;
+    background-color: #e6f7ec;
+    color: #1e7e34;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.file-error {
+    margin-top: 8px;
+    padding: 8px;
+    background-color: #fdecea;
+    color: #c82333;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
 

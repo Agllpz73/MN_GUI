@@ -57,11 +57,18 @@ def calculator_demo():
     return render_template("calculator.html")
 
 
-# 
+
+
 """
-Aquí se colocan la carga dinámica de los html específicos para cada método, se mapea el slug de cada método a su respectiva plantilla.
+Aquí iniciamos el módulo de carga de archivos.
+Se espera un archivo CSV con el formato adecuado 
+para cada método,que será procesado por la función 
+read_csv_file, se procesa en la API REST y luego
+utilizado en los cálculos numéricos
 """
-@main_bp.route("/<category>/<method>")
+# Método de ejemplo para poder corroborar la carga de archivos, se puede replicar para otros métodos que requieran entrada de datos desde archivos.
+
+@main_bp.route("/<category>/<method>", methods=["GET", "POST"])
 def method_view(category, method):
     methods = {
         "newton-raphson": "methods/newton_raphson.html",
@@ -96,39 +103,44 @@ def method_view(category, method):
     if method not in methods:
         abort(404)
 
-    return render_template(
-        "calculator.html",
-        category=category,   
-        method=method,
-        method_template=methods[method]
-        
-    )
+    datos = None
+    error = None
+    filename = None
+    success = False
 
-"""
-Aquí iniciamos el módulo de carga de archivos.
-Se espera un archivo CSV con el formato adecuado 
-para cada método,que será procesado por la función 
-read_csv_file, se procesa en la API REST y luego
-utilizado en los cálculos numéricos
-"""
-
-
-@main_bp.route("/interpolacion/minimos_cuadrados", methods=["GET", "POST"])
-def minimos_cuadrados():
-
+    # ===============================
+    # MANEJO DE POST
+    # ===============================
     if request.method == "POST":
 
-        archivo = request.files.get("archivo")
+        # SOLO para métodos que usan archivo
+        if method == "minimos-cuadrados":
 
-        if archivo:
-            try:
-                datos = read_csv_file(archivo)
-                # Aquí ya puedes separar X y Y
-            except ValueError as e:
-                return render_template(
-                    "calculator.html",
-                    error=str(e)
-                )
+            archivo = request.files.get("matrix_file")
 
-    return render_template("calculator.html")
+            if not archivo or archivo.filename == "":
+                error = "Debe adjuntar un archivo CSV"
+            else:
+                try:
+                    datos = read_csv_file(archivo)
+                    filename = archivo.filename
+                    success = True
+                except ValueError as e:
+                    error = str(e)
+
+        # Aquí después puedes agregar otros métodos
+        # elif method == "mc-transf":
+        #     ...
+
+    return render_template(
+        "calculator.html",
+        method=method,
+        method_template=methods[method],
+        datos=datos,
+        error=error,
+        filename=filename,
+        success=success
+    )
+
+
 

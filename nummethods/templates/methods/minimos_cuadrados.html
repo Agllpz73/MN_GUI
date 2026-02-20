@@ -37,3 +37,15 @@
     una tendencia representativa.
   </p>
 </div>
+
+{% if success %}
+    <div class="file-success">
+        Archivo cargado: <strong>{{ filename }}</strong>
+    </div>
+{% endif %}
+
+{% if error %}
+    <div class="file-error">
+        {{ error }}
+    </div>
+{% endif %}

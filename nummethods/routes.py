@@ -186,13 +186,34 @@ def method_view(category, method):
     error = None
     filename = None
     success = False
+    
+    # Lista de métodos que requieren carga de archivos, para mostrar u ocultar el formulario de carga en el template
+    file_methods = {
+    "minimos-cuadrados",
+    "mc-transf",
+    "lagrange",
+    "newton-dd",
+    "newton-df",
+    "gauss",
+    "gauss-jordan",
+    "matriz-inversa",
+    "lu",
+    "cholesky",
+    "gauss-seidel",
+    "jacobi",
+    "trapecio",
+    "simpson-1-3",
+    "simpson-3-8",
+    "cuadratura-gauss"
+    }
+
 
     # ===============================
     # MANEJO DE POST
     # ===============================
     if request.method == "POST":
 
-        if method == "minimos-cuadrados":
+        if method in file_methods:
 
             archivo = request.files.get("matrix_file")
 
@@ -209,9 +230,7 @@ def method_view(category, method):
                                     category=category,
                                     method=method))
 
-        # Aquí después puedes agregar otros métodos
-        # elif method == "mc-transf":
-        #     ...
+       
 
     return render_template(
         "calculator.html",
@@ -223,10 +242,14 @@ def method_view(category, method):
         filename=filename,
         success=success
     )
+    
+"""
+Validación de entrada por archivos
+"""
 @main_bp.route("/validate-file", methods=["POST"])
 def validate_file():
 
-    archivo = request.files.get("matrix_file")
+    archivo = next(iter(request.files.values()), None)
 
     if not archivo or archivo.filename == "":
         return {"status": "error", "message": "No se seleccionó archivo"}, 400
@@ -236,4 +259,6 @@ def validate_file():
         return {"status": "success", "filename": archivo.filename}
     except ValueError:
         return {"status": "error", "message": "Entradas no correctas"}, 400
+
+
 

@@ -47,35 +47,3 @@
   {% endif %}
 {% endwith %}
 
-
-<script>
-document.getElementById("file-input").addEventListener("change", function() {
-
-    const formData = new FormData();
-    formData.append("matrix_file", this.files[0]);
-
-    fetch("/validate-file", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-
-        const fileNameSpan = document.getElementById("file-name");
-
-        if (data.status === "success") {
-            fileNameSpan.textContent = "Archivo válido: " + data.filename;
-            fileNameSpan.style.color = "green";
-        } else {
-            fileNameSpan.textContent = data.message;
-            fileNameSpan.style.color = "red";
-        }
-    })
-    .catch(() => {
-        const fileNameSpan = document.getElementById("file-name");
-        fileNameSpan.textContent = "Entradas no correctas";
-        fileNameSpan.style.color = "red";
-    });
-
-});
-</script>

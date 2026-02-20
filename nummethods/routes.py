@@ -2,6 +2,20 @@
 from flask import Blueprint, abort, app, render_template
 from flask import request, jsonify, redirect, url_for, flash
 from .file_render import read_csv_file
+from .validators import (
+    validate_minimos_cuadrados,
+    validate_lagrange,
+    validate_sistema_lineal
+)
+method_validators = {
+    "minimos-cuadrados": validate_minimos_cuadrados,
+    "mc-transf": validate_minimos_cuadrados,
+    "lagrange": validate_lagrange,
+    "gauss": validate_sistema_lineal,
+    "gauss-jordan": validate_sistema_lineal,
+    "lu": validate_sistema_lineal,
+    "cholesky": validate_sistema_lineal,
+}
 
 
 
@@ -216,19 +230,26 @@ def method_view(category, method):
         if method in file_methods:
 
             archivo = request.files.get("matrix_file")
-
+        
             if not archivo or archivo.filename == "":
                 flash("Debe adjuntar un archivo CSV", "error")
             else:
                 try:
-                    read_csv_file(archivo)
+                    data = read_csv_file(archivo)
+        
+                    if method in method_validators:
+                        method_validators[method](data)
+        
                     flash(f"Archivo cargado: {archivo.filename}", "success")
-                except ValueError:
-                    flash("Entradas no correctas", "error")
-
-            return redirect(url_for("main.method_view",
-                                    category=category,
-                                    method=method))
+        
+                except ValueError as e:
+                    flash(str(e), "error")
+        
+            return redirect(url_for(
+                "main.method_view",
+                category=category,
+                method=method
+            ))
 
        
 

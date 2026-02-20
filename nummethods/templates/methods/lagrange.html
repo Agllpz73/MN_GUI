@@ -32,3 +32,12 @@
     <strong>poco eficiente para grandes conjuntos de datos</strong>.
   </p>
 </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="file-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}

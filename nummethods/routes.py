@@ -7,6 +7,8 @@ from .validators import (
     validate_lagrange,
     validate_sistema_lineal
 )
+from .file_render import CSVReaderError
+
 method_validators = {
     "minimos-cuadrados": validate_minimos_cuadrados,
     "mc-transf": validate_minimos_cuadrados,
@@ -230,21 +232,21 @@ def method_view(category, method):
         if method in file_methods:
 
             archivo = request.files.get("matrix_file")
-        
+
             if not archivo or archivo.filename == "":
                 flash("Debe adjuntar un archivo CSV", "error")
             else:
                 try:
                     data = read_csv_file(archivo)
-        
+
                     if method in method_validators:
                         method_validators[method](data)
-        
+
                     flash(f"Archivo cargado: {archivo.filename}", "success")
-        
-                except ValueError as e:
+
+                except CSVReaderError as e:
                     flash(str(e), "error")
-        
+
             return redirect(url_for(
                 "main.method_view",
                 category=category,

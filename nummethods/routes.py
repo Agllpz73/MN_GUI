@@ -8,6 +8,9 @@ from .validators import (
     validate_sistema_lineal
 )
 from .file_render import CSVReaderError
+from flask import jsonify, request
+from .core.engine import solve
+
 
 method_validators = {
     "minimos-cuadrados": validate_minimos_cuadrados,
@@ -284,4 +287,15 @@ def validate_file():
         return {"status": "error", "message": "Entradas no correctas"}, 400
 
 
+"""
+---------------------
+Sección de rutas para la API REST
+----------------------
+"""
 
+
+@main_bp.route("/api/solve/<method>", methods=["POST"])
+def solve_api(method):
+    data = request.json
+    result = solve(method, data)
+    return jsonify(result)

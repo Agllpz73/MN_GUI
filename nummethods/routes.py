@@ -294,8 +294,17 @@ Sección de rutas para la API REST
 """
 
 
+
+
 @main_bp.route("/api/solve/<method>", methods=["POST"])
 def solve_api(method):
+
     data = request.json
-    result = solve(method, data)
-    return jsonify(result)
+
+    try:
+        result = solve(method, data)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 400

@@ -84,24 +84,22 @@
     const points = [];
 
     // Rango visible en coordenadas matemáticas
-    const left = -(width / 2 + offsetX) / scale;
+    const left = -(width / 2 - offsetX) / scale;
     const right = (width / 2 - offsetX) / scale;
 
     const step = (right - left) / width;
 
     for (let x = left; x <= right; x += step) {
-      let y;
+      const y = x*x; // Aquí se debería evaluar la función real, pero como no tenemos acceso a ella, usamos y = x^2 como ejemplo
 
-      try {
-        // usamos los datos del backend como función evaluadora
-        y = window.currentFunctionEvaluator(x);
-      } catch {
-        continue;
-      }
+      if(!isFinite(y)) continue;
+
 
       points.push(toScreenX(x));
       points.push(toScreenY(y));
     }
+
+    if(points.length < 4) return; // No hay suficientes puntos para dibujar 
 
     const line = new Konva.Line({
       points: points,

@@ -48,13 +48,48 @@ def solve_newton(function_str, x0, tol, max_iter):
             }
 
         current_x = next_x
+        # Agregar funciones para poder gráficar cada función
+    
+     
+        
+        if(len(iterations) > 0):
+            x_values_iter = [step["x"] for step in iterations]
+            
+            start = min(x_values_iter) - 1
+            end = max(x_values_iter) + 1
+            num_points = 300
+            
+            step_size = (end - start) / num_points
+            
+            x_plot = []
+            y_plot = []
+            
+            current = start
+            
+            for _ in range(num_points ):
+                try:
+                    x_plot.append(current)
+                    y_plot.append(f(current))
+                except Exception:
+                    x_plot.append(current)
+                    y_plot.append(None)  # Si no se puede evaluar, asignar NaN
+                current += step_size
+        else:
+            x_plot = []
+            y_plot = []  
+        
+        
 
     return {
         "method": "newton",
         "root": current_x,
         "iterations": iterations,
         "converged": False,
-        "message": "Máximo de iteraciones alcanzado."
+        "message": "Máximo de iteraciones alcanzado.",
+        "plot_data": {
+            "x": x_plot,
+            "y": y_plot
+        }
     }
 
 

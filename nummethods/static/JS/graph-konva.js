@@ -6,19 +6,112 @@
   const height = container.clientHeight;
 
   // Estado del plano
-  let scale = 40;     // px por unidad
-  let offsetX = 0;   // desplazamiento matemático
+  let scale = 40; // px por unidad
+  let offsetX = 0; // desplazamiento matemático
   let offsetY = 0;
 
   const stage = new Konva.Stage({
     container: "graph-container",
     width,
-    height
+    height,
   });
 
   const layer = new Konva.Layer();
   stage.add(layer);
 
+  const functionLayer = new Konva.Layer();
+  const pointsLayer = new Konva.Layer();
+
+  stage.add(functionLayer);
+  stage.add(pointsLayer);
+
+  function toScreenX(x) {
+    return width / 2 + offsetX + x * scale;
+  }
+
+  function toScreenY(y) {
+    return height / 2 + offsetY - y * scale;
+  }
+
+  /*
+  function drawFunction(plotData) {
+    functionLayer.destroyChildren();
+
+    const points = [];
+
+    for (let i = 0; i < plotData.x.length; i++) {
+      const x = plotData.x[i];
+      const y = plotData.y[i];
+
+      if (y === null || isNaN(y)) continue;
+
+      points.push(toScreenX(x));
+      points.push(toScreenY(y));
+    }
+
+    const line = new Konva.Line({
+      points: points,
+      stroke: "blue",
+      strokeWidth: 2,
+    });
+
+    functionLayer.add(line);
+    functionLayer.draw();
+  }
+
+  function drawIterations(iterations) {
+    pointsLayer.destroyChildren();
+
+    iterations.forEach((step) => {
+      const circle = new Konva.Circle({
+        x: toScreenX(step.x),
+        y: toScreenY(step["f(x)"]),
+        radius: 5,
+        fill: "red",
+      });
+
+      pointsLayer.add(circle);
+    });
+
+    pointsLayer.draw();
+  }
+
+  */
+  // Función para renderizar la tabla de iteraciones y resultados modificando el epacio visual en la pantalla
+  function drawFunction(plotData) {
+    functionLayer.destroyChildren();
+
+    const points = [];
+
+    // Rango visible en coordenadas matemáticas
+    const left = -(width / 2 + offsetX) / scale;
+    const right = (width / 2 - offsetX) / scale;
+
+    const step = (right - left) / width;
+
+    for (let x = left; x <= right; x += step) {
+      let y;
+
+      try {
+        // usamos los datos del backend como función evaluadora
+        y = window.currentFunctionEvaluator(x);
+      } catch {
+        continue;
+      }
+
+      points.push(toScreenX(x));
+      points.push(toScreenY(y));
+    }
+
+    const line = new Konva.Line({
+      points: points,
+      stroke: "blue",
+      strokeWidth: 2,
+    });
+
+    functionLayer.add(line);
+    functionLayer.draw();
+  }
   /* =====================================================
      UTILIDADES MATEMÁTICAS (GeoGebra-style)
   ===================================================== */
@@ -70,22 +163,26 @@
     for (let x = originX % gridPx; x < width; x += gridPx) {
       const rawValue = (x - originX) / scale;
 
-      layer.add(new Konva.Line({
-        points: [x, 0, x, height],
-        stroke: "#e5e7eb",
-        strokeWidth: 1,
-        listening: false
-      }));
+      layer.add(
+        new Konva.Line({
+          points: [x, 0, x, height],
+          stroke: "#e5e7eb",
+          strokeWidth: 1,
+          listening: false,
+        }),
+      );
 
       if (Math.abs(rawValue) > 1e-9) {
-        layer.add(new Konva.Text({
-          x: x + 2,
-          y: originY + 4,
-          text: formatLabel(rawValue, step),
-          fontSize: 12,
-          fill: "#6b7280",
-          listening: false
-        }));
+        layer.add(
+          new Konva.Text({
+            x: x + 2,
+            y: originY + 4,
+            text: formatLabel(rawValue, step),
+            fontSize: 12,
+            fill: "#6b7280",
+            listening: false,
+          }),
+        );
       }
     }
 
@@ -93,45 +190,69 @@
     for (let y = originY % gridPx; y < height; y += gridPx) {
       const rawValue = -(y - originY) / scale;
 
-      layer.add(new Konva.Line({
-        points: [0, y, width, y],
-        stroke: "#e5e7eb",
-        strokeWidth: 1,
-        listening: false
-      }));
+      layer.add(
+        new Konva.Line({
+          points: [0, y, width, y],
+          stroke: "#e5e7eb",
+          strokeWidth: 1,
+          listening: false,
+        }),
+      );
 
       if (Math.abs(rawValue) > 1e-9) {
-        layer.add(new Konva.Text({
-          x: originX + 6,
-          y: y - 10,
-          text: formatLabel(rawValue, step),
-          fontSize: 12,
-          fill: "#6b7280",
-          listening: false
-        }));
+        layer.add(
+          new Konva.Text({
+            x: originX + 6,
+            y: y - 10,
+            text: formatLabel(rawValue, step),
+            fontSize: 12,
+            fill: "#6b7280",
+            listening: false,
+          }),
+        );
       }
     }
 
     // Eje X
-    layer.add(new Konva.Line({
-      points: [0, originY, width, originY],
-      stroke: "#374151",
-      strokeWidth: 2,
-      listening: false
-    }));
+    layer.add(
+      new Konva.Line({
+        points: [0, originY, width, originY],
+        stroke: "#374151",
+        strokeWidth: 2,
+        listening: false,
+      }),
+    );
 
     // Eje Y
-    layer.add(new Konva.Line({
-      points: [originX, 0, originX, height],
-      stroke: "#374151",
-      strokeWidth: 2,
-      listening: false
-    }));
+    layer.add(
+      new Konva.Line({
+        points: [originX, 0, originX, height],
+        stroke: "#374151",
+        strokeWidth: 2,
+        listening: false,
+      }),
+    );
 
     layer.draw();
   }
 
-  drawGrid();
+  //drawGrid();
+  function drawIterations(iterations) {
+    pointsLayer.destroyChildren();
+
+    iterations.forEach((step) => {
+      const circle = new Konva.Circle({
+        x: toScreenX(step.x),
+        y: toScreenY(step["f(x)"]),
+        radius: 5,
+        fill: "red",
+      });
+
+      pointsLayer.add(circle);
+    });
+
+    pointsLayer.draw();
+  }
 
   /* =====================================================
      PAN (ARRASTRE MATEMÁTICO)
@@ -152,6 +273,10 @@
 
     lastPos = pos;
     drawGrid();
+    if (window.currentPlotData) {
+      drawFunction(window.currentPlotData.plot_data);
+      drawIterations(window.currentPlotData.iterations);
+    }
   });
 
   stage.on("mouseup touchend mouseleave", () => {
@@ -169,16 +294,39 @@
     const oldScale = scale;
 
     const zoomFactor = e.evt.deltaY > 0 ? 0.9 : 1.1;
-    scale = Math.max(0.001, Math.min(scale * zoomFactor, 5000000000000000000000000000000000000000));
+    scale = Math.max(
+      0.001,
+      Math.min(scale * zoomFactor, 5000000000000000000000000000000000000000),
+    );
 
     const factor = scale / oldScale;
 
-    offsetX = (offsetX - pointer.x + width / 2) * factor + pointer.x - width / 2;
-    offsetY = (offsetY - pointer.y + height / 2) * factor + pointer.y - height / 2;
+    offsetX =
+      (offsetX - pointer.x + width / 2) * factor + pointer.x - width / 2;
+    offsetY =
+      (offsetY - pointer.y + height / 2) * factor + pointer.y - height / 2;
 
     drawGrid();
+    if (window.currentPlotData) {
+      drawFunction(window.currentPlotData.plot_data);
+      drawIterations(window.currentPlotData.iterations);
+    }
   });
 
   // Exponer para debug
   window.konvaStage = stage;
+  window.drawNewtonGraph = function (data) {
+    window.currentPlotData = data;
+    drawFunction(data.plot_data);
+    drawIterations(data.iterations);
+    window.currentFunctionEvaluator = function (x) {
+      const index = window.currentPlotData.plot_data.x.findIndex(
+        (val) => Math.abs(val - x) < 1e-6,
+      );
+      if (index !== -1) {
+        return window.currentPlotData.plot_data.y[index];
+      }
+      return null;
+    };
+  };
 })();

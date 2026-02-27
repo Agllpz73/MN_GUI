@@ -23,11 +23,15 @@ async function solveNewton(event) {
             },
             body: JSON.stringify(payload)
         });
+        console .log("Respuesta recibida del servidor:", response.status);
+        const text = await response.text();
+        console.log("Texto de respuesta:", text);
 
-        const data = await response.json();
+        const data = JSON.parse(text);
+        console.log("Datos parseados:", data);
 
-        
         renderProcedure(data); // Mostrar tabla
+        window.drawNewtonGraph(data); // Mostrar gráfico
 
     } catch (error) {
         console.error("Error:", error);

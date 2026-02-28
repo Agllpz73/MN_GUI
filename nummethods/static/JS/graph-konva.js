@@ -78,33 +78,42 @@
 
   */
   // Función para renderizar la tabla de iteraciones y resultados modificando el epacio visual en la pantalla
-  function drawFunction(plotData) {
+  function drawFunction() {
     functionLayer.destroyChildren();
+
+    if (!window.currentFunction) return;
 
     const points = [];
 
-    // Rango visible en coordenadas matemáticas
-    const left = -(width / 2 - offsetX) / scale;
+    // ✅ Rango visible correcto
+    const left = (-width / 2 - offsetX) / scale;
     const right = (width / 2 - offsetX) / scale;
 
     const step = (right - left) / width;
 
     for (let x = left; x <= right; x += step) {
-      const y = x*x; // Aquí se debería evaluar la función real, pero como no tenemos acceso a ella, usamos y = x^2 como ejemplo
+      let y;
 
-      if(!isFinite(y)) continue;
+      try {
+        y = window.currentFunction.evaluate({ x: x });
+      } catch {
+        continue;
+      }
 
+      if (!isFinite(y)) continue;
 
       points.push(toScreenX(x));
       points.push(toScreenY(y));
     }
 
-    if(points.length < 4) return; // No hay suficientes puntos para dibujar 
+    if (points.length < 4) return;
 
     const line = new Konva.Line({
       points: points,
       stroke: "blue",
       strokeWidth: 2,
+      lineCap: "round",
+      lineJoin: "round",
     });
 
     functionLayer.add(line);
@@ -313,18 +322,20 @@
 
   // Exponer para debug
   window.konvaStage = stage;
+
+
+
   window.drawNewtonGraph = function (data) {
     window.currentPlotData = data;
-    drawFunction(data.plot_data);
+
+    // 🔥 COMPILAR FUNCIÓN
+    if (data.function_str) {
+      window.currentFunction = math.compile(data.function_str);
+    } else {
+      window.currentFunction = null;
+    }
+
+    drawFunction();
     drawIterations(data.iterations);
-    window.currentFunctionEvaluator = function (x) {
-      const index = window.currentPlotData.plot_data.x.findIndex(
-        (val) => Math.abs(val - x) < 1e-6,
-      );
-      if (index !== -1) {
-        return window.currentPlotData.plot_data.y[index];
-      }
-      return null;
-    };
   };
 })();

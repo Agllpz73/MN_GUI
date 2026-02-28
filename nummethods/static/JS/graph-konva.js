@@ -33,92 +33,68 @@
     return height / 2 + offsetY - y * scale;
   }
 
-  /*
-  function drawFunction(plotData) {
-    functionLayer.destroyChildren();
-
-    const points = [];
-
-    for (let i = 0; i < plotData.x.length; i++) {
-      const x = plotData.x[i];
-      const y = plotData.y[i];
-
-      if (y === null || isNaN(y)) continue;
-
-      points.push(toScreenX(x));
-      points.push(toScreenY(y));
-    }
-
-    const line = new Konva.Line({
-      points: points,
-      stroke: "blue",
-      strokeWidth: 2,
-    });
-
-    functionLayer.add(line);
-    functionLayer.draw();
-  }
-
-  function drawIterations(iterations) {
-    pointsLayer.destroyChildren();
-
-    iterations.forEach((step) => {
-      const circle = new Konva.Circle({
-        x: toScreenX(step.x),
-        y: toScreenY(step["f(x)"]),
-        radius: 5,
-        fill: "red",
-      });
-
-      pointsLayer.add(circle);
-    });
-
-    pointsLayer.draw();
-  }
-
-  */
   // Función para renderizar la tabla de iteraciones y resultados modificando el epacio visual en la pantalla
   function drawFunction() {
-    functionLayer.destroyChildren();
+  functionLayer.destroyChildren();
 
-    if (!window.currentFunction) return;
+  if (!window.currentFunction) return;
 
-    const points = [];
+  const left = (-width / 2 - offsetX) / scale;
+  const right = (width / 2 - offsetX) / scale;
+  const step = (right - left) / width;
 
-    // ✅ Rango visible correcto
-    const left = (-width / 2 - offsetX) / scale;
-    const right = (width / 2 - offsetX) / scale;
+  let segment = [];
+  let lastY = null;
 
-    const step = (right - left) / width;
+  for (let x = left; x <= right; x += step) {
+    let y;
 
-    for (let x = left; x <= right; x += step) {
-      let y;
-
-      try {
-        y = window.currentFunction.evaluate({ x: x });
-      } catch {
-        continue;
-      }
-
-      if (!isFinite(y)) continue;
-
-      points.push(toScreenX(x));
-      points.push(toScreenY(y));
+    try {
+      y = window.currentFunction.evaluate({ x: x });
+    } catch {
+      lastY = null;
+      continue;
     }
 
-    if (points.length < 4) return;
+    if (!isFinite(y)) {
+      lastY = null;
+      continue;
+    }
 
-    const line = new Konva.Line({
-      points: points,
+    
+    if (lastY !== null && Math.abs(y - lastY) > 50) {
+     
+      if (segment.length >= 4) {
+        functionLayer.add(new Konva.Line({
+          points: segment,
+          stroke: "blue",
+          strokeWidth: 2,
+          lineCap: "round",
+          lineJoin: "round",
+        }));
+      }
+      segment = [];
+    }
+
+    segment.push(toScreenX(x));
+    segment.push(toScreenY(y));
+
+    lastY = y;
+  }
+
+
+  if (segment.length >= 4) {
+    functionLayer.add(new Konva.Line({
+      points: segment,
       stroke: "blue",
       strokeWidth: 2,
       lineCap: "round",
       lineJoin: "round",
-    });
-
-    functionLayer.add(line);
-    functionLayer.draw();
+    }));
   }
+
+  functionLayer.draw();
+}
   /* =====================================================
      UTILIDADES MATEMÁTICAS (GeoGebra-style)
   ===================================================== */

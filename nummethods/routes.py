@@ -77,8 +77,6 @@ def calculator_demo():
     return render_template("calculator.html")
 
 
-
-
 """
 Aquí iniciamos el módulo de carga de archivos.
 Se espera un archivo CSV con el formato adecuado 
@@ -88,84 +86,6 @@ utilizado en los cálculos numéricos
 """
 # Método de ejemplo para poder corroborar la carga de archivos, se puede replicar para otros métodos que requieran entrada de datos desde archivos.
 
-
-"""
-@main_bp.route("/<category>/<method>", methods=["GET", "POST"])
-def method_view(category, method):
-    methods = {
-        "newton-raphson": "methods/newton_raphson.html",
-        "biseccion": "methods/biseccion.html",
-        "secante": "methods/secante.html",
-        "falsa-posicion": "methods/falsa_posicion.html",
-        "punto-fijo": "methods/punto_fijo.html",
-        "newton-raphson-sistema": "methods/newton_raphson_Sistema.html",
-        "punto-fijo-sistema": "methods/punto_fijo_Sitema.html",
-        "gauss": "methods/gauss.html",
-        "gauss-jordan": "methods/gauss_jordan.html",
-        "matriz-inversa": "methods/matriz_inversa.html",
-        "lu": "methods/lu.html",
-        "cholesky": "methods/cholesky.html",
-        "gauss-seidel": "methods/gauss_seidel.html",
-        "jacobi": "methods/jacobi.html",
-        "lagrange": "methods/lagrange.html",
-        "newton-dd": "methods/newton_divididas.html",
-        "newton-df": "methods/newton_diferencias.html",
-        "minimos-cuadrados": "methods/minimos_cuadrados.html",
-        "mc-transf": "methods/mc_transf.html",
-        "trapecio": "methods/trapecio.html",
-        "simpson-1-3": "methods/simpson_1_3.html",
-        "simpson-3-8": "methods/simpson_3_8.html",
-        "cuadratura-gauss": "methods/cuadratura_gauss.html",
-        "euler": "methods/euler.html",
-        "runge-kutta": "methods/runge_kutta.html",
-        "euler-mejorado": "methods/euler_mejorado.html"
-
-    }
-
-    if method not in methods:
-        abort(404)
-
-    datos = None
-    error = None
-    filename = None
-    success = False
-
-    # ===============================
-    # MANEJO DE POST
-    # ===============================
-    if request.method == "POST":
-
-        if method == "minimos-cuadrados":
-
-            archivo = request.files.get("matrix_file")
-
-            if not archivo or archivo.filename == "":
-                flash("Debe adjuntar un archivo CSV", "error")
-            else:
-                try:
-                    read_csv_file(archivo)
-                    flash(f"Archivo cargado: {archivo.filename}", "success")
-                except ValueError:
-                    flash("Entradas no correctas", "error")
-
-            return redirect(url_for("main.method_view",
-                                    category=category,
-                                    method=method))
-
-        # Aquí después puedes agregar otros métodos
-        # elif method == "mc-transf":
-        #     ...
-
-    return render_template(
-        "calculator.html",
-        method=method,
-        method_template=methods[method],
-        datos=datos,
-        error=error,
-        filename=filename,
-        success=success
-    )
-"""
 @main_bp.route("/<category>/<method>", methods=["GET", "POST"])
 def method_view(category, method):
     methods = {

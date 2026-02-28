@@ -1,5 +1,4 @@
 // función para agregar funcionalidad al botón de calcular, se llama desde el HTML
-// Version 2 
 
 function insertAllCursor(input, text) {
     const start = input.selectionStart;

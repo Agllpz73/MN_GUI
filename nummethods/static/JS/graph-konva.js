@@ -96,7 +96,7 @@
   functionLayer.draw();
 }
   /* =====================================================
-     UTILIDADES MATEMÁTICAS (GeoGebra-style)
+     UTILIDADES MATEMÁTICAS
   ===================================================== */
 
   function getNiceStep(scale) {

@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
     document.querySelector(".back")?.addEventListener("mousedown", (e) => {
-        e.preventDefault(); // Evita que el botón tome el foco
+        e.preventDefault(); 
         const input = document.activeElement;
         if(!input || (input.tagName !== "INPUT" && input.tagName !== "TEXTAREA")) return;
 

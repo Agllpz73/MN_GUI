@@ -1,8 +1,5 @@
 from ..utils.parser import build_function_and_derivative
 
-from ..utils.parser import build_function_and_derivative
-
-
 def solve_biseccion(function_str, a, b, tol, max_iter):
 
     try:
@@ -45,7 +42,8 @@ def solve_biseccion(function_str, a, b, tol, max_iter):
             "a": a,
             "b": b,
             "c": c,
-            "f(c)": fc,
+            "x": c,
+            "fx": fc,
             "error": error
         })
 

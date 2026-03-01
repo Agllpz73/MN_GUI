@@ -35,7 +35,7 @@ def solve_newton(function_str, x0, tol, max_iter):
         iterations.append({
             "iteration": i,
             "x": next_x,
-            "f(x)": fx,
+            "fx": fx,
             "error": error
         })
 

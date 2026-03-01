@@ -35,66 +35,67 @@
 
   // Función para renderizar la tabla de iteraciones y resultados modificando el epacio visual en la pantalla
   function drawFunction() {
-  functionLayer.destroyChildren();
+    functionLayer.destroyChildren();
 
-  if (!window.currentFunction) return;
+    if (!window.currentFunction) return;
 
-  const left = (-width / 2 - offsetX) / scale;
-  const right = (width / 2 - offsetX) / scale;
-  const step = (right - left) / width;
+    const left = (-width / 2 - offsetX) / scale;
+    const right = (width / 2 - offsetX) / scale;
+    const step = (right - left) / width;
 
-  let segment = [];
-  let lastY = null;
+    let segment = [];
+    let lastY = null;
 
-  for (let x = left; x <= right; x += step) {
-    let y;
+    for (let x = left; x <= right; x += step) {
+      let y;
 
-    try {
-      y = window.currentFunction.evaluate({ x: x });
-    } catch {
-      lastY = null;
-      continue;
+      try {
+        y = window.currentFunction.evaluate({ x: x });
+      } catch {
+        lastY = null;
+        continue;
+      }
+
+      if (!isFinite(y)) {
+        lastY = null;
+        continue;
+      }
+
+      if (lastY !== null && Math.abs(y - lastY) > 50) {
+        if (segment.length >= 4) {
+          functionLayer.add(
+            new Konva.Line({
+              points: segment,
+              stroke: "blue",
+              strokeWidth: 2,
+              lineCap: "round",
+              lineJoin: "round",
+            }),
+          );
+        }
+        segment = [];
+      }
+
+      segment.push(toScreenX(x));
+      segment.push(toScreenY(y));
+
+      lastY = y;
     }
 
-    if (!isFinite(y)) {
-      lastY = null;
-      continue;
-    }
-
-    
-    if (lastY !== null && Math.abs(y - lastY) > 50) {
-     
-      if (segment.length >= 4) {
-        functionLayer.add(new Konva.Line({
+    if (segment.length >= 4) {
+      functionLayer.add(
+        new Konva.Line({
           points: segment,
           stroke: "blue",
           strokeWidth: 2,
           lineCap: "round",
           lineJoin: "round",
-        }));
-      }
-      segment = [];
+        }),
+      );
     }
 
-    segment.push(toScreenX(x));
-    segment.push(toScreenY(y));
-
-    lastY = y;
+    functionLayer.draw();
   }
-
-
-  if (segment.length >= 4) {
-    functionLayer.add(new Konva.Line({
-      points: segment,
-      stroke: "blue",
-      strokeWidth: 2,
-      lineCap: "round",
-      lineJoin: "round",
-    }));
-  }
-
-  functionLayer.draw();
-}
   /* =====================================================
      UTILIDADES MATEMÁTICAS
   ===================================================== */
@@ -223,20 +224,49 @@
   function drawIterations(iterations) {
     pointsLayer.destroyChildren();
 
+    if (!iterations || iterations.length === 0) return;
+
+    let linePoints = [];
+
     iterations.forEach((step) => {
+      const x = Number(step.x);
+      const y = Number(step.fx);
+
+      if (!isFinite(x) || !isFinite(y)) return;
+
+      const screenX = toScreenX(x);
+      const screenY = toScreenY(y);
+
       const circle = new Konva.Circle({
-        x: toScreenX(step.x),
-        y: toScreenY(step["f(x)"]),
+        x: screenX,
+        y: screenY,
         radius: 5,
         fill: "red",
       });
 
       pointsLayer.add(circle);
+
+      linePoints.push(screenX);
+      linePoints.push(screenY);
     });
+
+    if (linePoints.length >= 4) {
+      const line = new Konva.Line({
+        points: linePoints,
+        stroke: "red",
+        strokeWidth: 2,
+        lineCap: "round",
+        lineJoin: "round",
+      });
+
+      pointsLayer.add(line);
+    }
+
+    // 🔥 FORZAR QUE LOS PUNTOS ESTÉN ENCIMA
+    pointsLayer.moveToTop();
 
     pointsLayer.draw();
   }
-
   /* =====================================================
      PAN (ARRASTRE MATEMÁTICO)
   ===================================================== */
@@ -299,12 +329,9 @@
   // Exponer para debug
   window.konvaStage = stage;
 
-
-
   window.drawNewtonGraph = function (data) {
     window.currentPlotData = data;
 
-    // 🔥 COMPILAR FUNCIÓN
     if (data.function_str) {
       window.currentFunction = math.compile(data.function_str);
     } else {

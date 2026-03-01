@@ -38,3 +38,34 @@ async function solveNewton(event) {
         alert("Ocurrió un error al ejecutar el método.");
     }
 }
+
+// Agregamos solve_biseccion
+
+async function solveBiseccion(event) {
+    event.preventDefault();
+    const form = document.getElementById("method-form");
+    const formData = new FormData(form);
+
+    const payload = {
+        function: formData.get("fx"),
+        a: parseFloat(formData.get("a")),
+        b: parseFloat(formData.get("b")),
+        tol: parseFloat(formData.get("tol")),
+        max_iter: parseInt(formData.get("max_iter"))
+    };
+
+    try {
+        const response = await fetch("/api/solve/biseccion", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        renderProcedure(data);
+        window.drawBiseccionGraph(data);
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Ocurrió un error al ejecutar el método.");
+    }
+}

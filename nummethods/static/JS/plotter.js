@@ -25,7 +25,7 @@ function renderProcedure(data) {
             <tr>
                 <td>${step.iteration}</td>
                 <td>${Number(step.x).toFixed(6)}</td>
-                <td>${Number(step["f(x)"]).toFixed(6)}</td>
+                <td>${Number(step.fx).toFixed(6)}</td>
                 <td>${Number(step.error).toExponential(3)}</td>
             </tr>
         `;

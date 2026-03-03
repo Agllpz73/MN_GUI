@@ -154,3 +154,38 @@ async function solveFalsaPosicion(event) {
     }
 
 }
+
+async function solvePuntoFijo(event) {
+    event.preventDefault();
+    const form = document.getElementById("method-form");
+    const formData = new FormData(form);
+    
+    const payload = {
+        function: formData.get("fx"),
+        x0: parseFloat(formData.get("x0")),
+        tol: parseFloat(formData.get("tol")),
+        max_iter: parseInt(formData.get("max_iter"))
+    };
+
+
+    try {
+        const response = await fetch("/api/solve/punto-fijo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if(data.error){
+            alert(data.error);
+            return;
+        }
+
+        renderProcedure(data);
+        window.drawNewtonGraph(data);
+
+    } catch (error) {
+        console.error("Error en solvePuntoFijo:", error);
+        alert("Error al ejecutar el método de punto fijo.");
+    }
+}

@@ -37,5 +37,13 @@ def solve(method_name, data):
             tol=data.get("tol", 1e-6),
             max_iter=data.get("max_iter", 100)
         )
+    elif method_name == "punto-fijo":
+        from .methods.punto_fijo import solve_punto_fijo
+        return solve_punto_fijo(
+            function_str=data["function"],
+            x0=data["x0"],
+            tol=data.get("tol", 1e-6),
+            max_iter=data.get("max_iter", 100)
+        )
 
     raise ValueError("Método no soportado")

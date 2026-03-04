@@ -1,34 +1,35 @@
 <form method="POST" enctype="multipart/form-data" class="file-form">
   <label class="form-label">
-    Sistema de ecuaciones:
+    Número de ecuaciones:
     <span class="help-icon">?</span>
   </label>
 
-  <!-- Input real oculto -->
-  <input type="file" id="file-input" name="matrix_file" accept=".csv" hidden />
+  <select id="num-equations" name="num_eq" required>
+    <option value="">Selecciona</option>
+    
+    <option value="2">2 variables (x, y)</option>
+    <option value="3">3 variables (x, y, z)</option>
+  </select>
 
-  <!-- Botón visual personalizado -->
-  <label for="file-input" class="file-upload-btn">
-    Adjunta tu archivo .CSV
-  </label>
+  <div id="functions-container"></div>
 
-  <span id="file-name" class="file-name"></span>
+  <div id="initial-values-container"></div>
 
   <label class="form-label">Tolerancia (ε):</label>
   <input
     type="number"
     step="any"
     name="tol"
-    placeholder="ej. 0.0021"
+    placeholder="ej. 0.0001"
     required
   />
 
   <label class="form-label">Iteraciones máximas:</label>
-  <input type="number" name="max_iter" placeholder="ej. 4" required />
+  <input type="number" name="max_iter" placeholder="ej. 20" required />
 
   <button type="submit" class="primary-btn">Iniciar</button>
 </form>
-
+<br>
 <div class="method-card">
   <div class="method-card-header">
     <div class="method-card-icon">i</div>
@@ -38,6 +39,52 @@
   <p>
     Método iterativo para resolver sistemas de ecuaciones no lineales mediante
     aproximaciones sucesivas. Requiere una estimación inicial y el uso del
-    <strong>Jacobiano</strong> del sistema para actualizar la <strong>solución</strong>.
+    <strong>Jacobiano</strong> del sistema para actualizar la
+    <strong>solución</strong>.
   </p>
 </div>
+<script>
+document.getElementById("num-equations").addEventListener("change", function () {
+
+    const n = parseInt(this.value);
+    const funcContainer = document.getElementById("functions-container");
+    const initContainer = document.getElementById("initial-values-container");
+
+    funcContainer.innerHTML = "";
+    initContainer.innerHTML = "";
+
+    if (!n) return;
+
+    const variables = ["x", "y", "z"];
+
+    for (let i = 0; i < n; i++) {
+
+        // Funciones
+        funcContainer.innerHTML += `
+            <label class="form-label">
+                f${i+1}(${variables.slice(0,n).join(", ")}) =
+            </label>
+            <input
+                type="text"
+                name="functions"
+                placeholder="Ej: x**2 + y - 4"
+                required
+            />
+        `;
+
+        // Valores iniciales
+        initContainer.innerHTML += `
+            <label class="form-label">
+                Valor inicial ${variables[i]}₀:
+            </label>
+            <input
+                type="number"
+                step="any"
+                name="x0"
+                placeholder="Ej: 1"
+                required
+            />
+        `;
+    }
+});
+</script>

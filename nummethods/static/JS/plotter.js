@@ -58,7 +58,7 @@ function renderProcedureSystem(data) {
       <thead>
         <tr>
           <th>Iteración</th>
-          <th>Vector X</th>
+          <th>Aproximaciones (x,y)</th>
           <th>Error</th>
         </tr>
       </thead>
@@ -68,7 +68,7 @@ function renderProcedureSystem(data) {
   data.iterations.forEach((step) => {
     table += `
       <tr>
-        <td>${step.iteration}</td>
+        <td>${step.iter}</td>
         <td>[ ${step.x.map(v => v.toFixed(6)).join(", ")} ]</td>
         <td>${Number(step.error).toExponential(3)}</td>
       </tr>

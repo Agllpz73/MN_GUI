@@ -42,7 +42,7 @@ def newton_system(functions, x0, tol, max_iter):
         error = np.linalg.norm(x_next - xk, ord=np.inf)
 
         history.append({
-            "iter": iteration,
+            "iter": iteration +1,
             "x": x_next.tolist(),
             "error": error
         })

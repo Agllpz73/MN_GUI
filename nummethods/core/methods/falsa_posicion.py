@@ -31,7 +31,8 @@ def solve_falsa_posicion(function_str, a, b, tol, max_iter):
                 "root": xr,
                 "iterations": iterations,
                 "function_str": function_str.replace("**", "^"),
-                "method": "falsa_posicion"
+                "method": "falsa_posicion",
+                "dimension" : 1
             }
 
         if fa * fxr < 0:
@@ -47,5 +48,6 @@ def solve_falsa_posicion(function_str, a, b, tol, max_iter):
         "iterations": iterations,
         "function_str": function_str,
         "method": "falsa_posicion",
-        "message": "Máximo de iteraciones alcanzado."
+        "message": "Máximo de iteraciones alcanzado.",
+        "dimension" : 1
     }

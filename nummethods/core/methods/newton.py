@@ -81,7 +81,8 @@ def solve_newton(function_str, x0, tol, max_iter):
             "x": x_plot,
             "y": y_plot
         },
-        "function_str": function_str.replace("**", "^")
+        "function_str": function_str.replace("**", "^"),
+        "dimension" : 1
     }
 
 
@@ -91,5 +92,6 @@ def error_response(title, detail):
         "root": None,
         "iterations": [],
         "converged": False,
-        "message": f"{title} {detail}"
+        "message": f"{title} {detail}",
+        "dimension" : 1
     }

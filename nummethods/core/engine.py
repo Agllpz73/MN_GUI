@@ -2,6 +2,7 @@ from .methods.newton import solve_newton
 from .methods.biseccion import solve_biseccion
 from .methods.secante import solve_secante
 from .methods.falsa_posicion import solve_falsa_posicion
+from .methods.newton_sistemas import newton_system
 
 def solve(method_name, data):
 
@@ -41,6 +42,13 @@ def solve(method_name, data):
         from .methods.punto_fijo import solve_punto_fijo
         return solve_punto_fijo(
             function_str=data["function"],
+            x0=data["x0"],
+            tol=data.get("tol", 1e-6),
+            max_iter=data.get("max_iter", 100)
+        )
+    elif method_name == "newton-raphson-sistema":
+        return newton_system(
+            functions=data["functions"],
             x0=data["x0"],
             tol=data.get("tol", 1e-6),
             max_iter=data.get("max_iter", 100)

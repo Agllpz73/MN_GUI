@@ -69,5 +69,6 @@ def solve_secante(function_str, x0, x1, tol, max_iter):
         "iterations": iterations,
         "converged": False,
         "message": "Máximo de iteraciones alcanzado.",
-        "function_str": function_str.replace("**", "^")
+        "function_str": function_str.replace("**", "^"),
+        "dimension" : 1
     }    

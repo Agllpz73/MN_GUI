@@ -25,7 +25,8 @@ def solve_punto_fijo(function_str, x0, tol, max_iter):
                 "root": x_next,
                 "iterations": iterations,
                 "function_str": function_str.replace("**", "^"),
-                "method": "punto_fijo"
+                "method": "punto_fijo",
+                "dimension" :1
             }
         xn = x_next
         
@@ -35,6 +36,7 @@ def solve_punto_fijo(function_str, x0, tol, max_iter):
         "iterations": iterations,
         "function_str": function_str.replace("**", "^"),
         "method": "punto_fijo",
-        "message": "Máximo de iteraciones alcanzado."
+        "message": "Máximo de iteraciones alcanzado.",
+        "dimension" : 1
     }
         

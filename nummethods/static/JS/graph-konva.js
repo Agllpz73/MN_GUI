@@ -267,6 +267,134 @@
 
     pointsLayer.draw();
   }
+  // Funcion para dibujar la función en dos dimensiones, por ahora solo se implementa para 1D pero se deja la estructura para futuras mejoras
+
+  function drawImplicitFunction(eq) {
+    const f = math.compile(eq);
+
+    // rango visible del plano
+    const xmin = (-width / 2 - offsetX) / scale;
+    const xmax = (width / 2 - offsetX) / scale;
+    const ymin = (-height / 2 + offsetY) / scale;
+    const ymax = (height / 2 + offsetY) / scale;
+
+    const step = Math.max(0.01, 4 / scale);
+
+    function interp(p1, p2, v1, v2) {
+      const t = v1 / (v1 - v2);
+      return [p1[0] + t * (p2[0] - p1[0]), p1[1] + t * (p2[1] - p1[1])];
+    }
+
+    for (let x = xmin; x < xmax; x += step) {
+      for (let y = ymin; y < ymax; y += step) {
+        let f00, f10, f01, f11;
+
+        try {
+          f00 = f.evaluate({ x: x, y: y });
+          f10 = f.evaluate({ x: x + step, y: y });
+          f01 = f.evaluate({ x: x, y: y + step });
+          f11 = f.evaluate({ x: x + step, y: y + step });
+        } catch {
+          continue;
+        }
+
+        // evitar valores infinitos o extremadamente grandes
+        if (
+          !isFinite(f00) ||
+          !isFinite(f10) ||
+          !isFinite(f01) ||
+          !isFinite(f11)
+        )
+          continue;
+
+        if (
+          Math.abs(f00) > 1e6 ||
+          Math.abs(f10) > 1e6 ||
+          Math.abs(f01) > 1e6 ||
+          Math.abs(f11) > 1e6
+        )
+          continue;
+
+        const p00 = [x, y];
+        const p10 = [x + step, y];
+        const p01 = [x, y + step];
+        const p11 = [x + step, y + step];
+
+        let pts = [];
+
+        if (f00 * f10 < 0) pts.push(interp(p00, p10, f00, f10));
+        if (f10 * f11 < 0) pts.push(interp(p10, p11, f10, f11));
+        if (f11 * f01 < 0) pts.push(interp(p11, p01, f11, f01));
+        if (f01 * f00 < 0) pts.push(interp(p01, p00, f01, f00));
+
+        if (pts.length === 2) {
+          // evitar dibujar infinito cerca de asíntotas
+          if (
+            Math.abs(pts[0][0]) > 1e6 ||
+            Math.abs(pts[0][1]) > 1e6 ||
+            Math.abs(pts[1][0]) > 1e6 ||
+            Math.abs(pts[1][1]) > 1e6
+          )
+            continue;
+
+          const s1 = [toScreenX(pts[0][0]), toScreenY(pts[0][1])];
+
+          const s2 = [toScreenX(pts[1][0]), toScreenY(pts[1][1])];
+
+          functionLayer.add(
+            new Konva.Line({
+              points: [s1[0], s1[1], s2[0], s2[1]],
+              stroke: "blue",
+              strokeWidth: 2,
+              lineCap: "round",
+              listening: false,
+            }),
+          );
+        }
+      }
+    }
+
+    functionLayer.draw();
+  }
+  function drawNewtonPath2D(iterations) {
+    pointsLayer.destroyChildren();
+
+    let linePoints = [];
+
+    iterations.forEach((step) => {
+      const x = step.x[0];
+      const y = step.x[1];
+
+      const screenX = toScreenX(x);
+      const screenY = toScreenY(y);
+
+      linePoints.push(screenX);
+      linePoints.push(screenY);
+
+      pointsLayer.add(
+        new Konva.Circle({
+          x: screenX,
+          y: screenY,
+          radius: 5,
+          fill: "red",
+        }),
+      );
+    });
+
+    if (linePoints.length >= 4) {
+      pointsLayer.add(
+        new Konva.Line({
+          points: linePoints,
+          stroke: "red",
+          strokeWidth: 2,
+        }),
+      );
+    }
+
+    pointsLayer.moveToTop();
+    pointsLayer.draw();
+  }
+
   /* =====================================================
      PAN (ARRASTRE MATEMÁTICO)
   ===================================================== */
@@ -287,8 +415,20 @@
     lastPos = pos;
     drawGrid();
     if (window.currentPlotData) {
-      drawFunction(window.currentPlotData.plot_data);
-      drawIterations(window.currentPlotData.iterations);
+      const data = window.currentPlotData;
+
+      if (data.dimension === 1) {
+        drawFunction();
+        drawIterations(data.iterations);
+      } else if (data.dimension === 2) {
+        functionLayer.destroyChildren();
+        if (data.functions) {
+          data.functions.forEach((eq) => drawImplicitFunction(eq));
+        }
+        functionLayer.draw();
+
+        drawNewtonPath2D(data.history || data.iterations);
+      }
     }
   });
 
@@ -321,8 +461,20 @@
 
     drawGrid();
     if (window.currentPlotData) {
-      drawFunction(window.currentPlotData.plot_data);
-      drawIterations(window.currentPlotData.iterations);
+      const data = window.currentPlotData;
+
+      if (data.dimension === 1) {
+        drawFunction();
+        drawIterations(data.iterations);
+      } else if (data.dimension === 2) {
+        functionLayer.destroyChildren();
+        if (data.functions) {
+          data.functions.forEach((eq) => drawImplicitFunction(eq));
+        }
+        functionLayer.draw();
+
+        drawNewtonPath2D(data.history || data.iterations);
+      }
     }
   });
 
@@ -332,13 +484,31 @@
   window.drawNewtonGraph = function (data) {
     window.currentPlotData = data;
 
-    if (data.function_str) {
-      window.currentFunction = math.compile(data.function_str);
-    } else {
-      window.currentFunction = null;
-    }
+    const dimension = data.dimension || 1;
 
-    drawFunction();
-    drawIterations(data.iterations);
+    if (dimension === 1) {
+      if (data.function_str) {
+        window.currentFunction = math.compile(data.function_str);
+        drawFunction();
+      }
+      drawIterations(data.iterations);
+    } else if (dimension === 2) {
+      // Para 2D, podríamos implementar un renderizado de superficie o contornos
+
+      window.currentFunction = null;
+      if (data.functions) {
+        // Implementar gráfico 2D si es necesario
+        functionLayer.destroyChildren();
+        data.functions.forEach((eq) => {
+          drawImplicitFunction(eq);
+        });
+        functionLayer.draw();
+      }
+      drawNewtonPath2D(data.history || data.iterations);
+    } else if (dimension === 3) {
+      // Para 3D, se necesitaría una librería diferente o un renderizado personalizado
+      window.currentFunction = null;
+      console.warn("Gráficos 3D no implementados en esta versión.");
+    }
   };
 })();

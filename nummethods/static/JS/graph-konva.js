@@ -395,6 +395,53 @@
     pointsLayer.draw();
   }
 
+  /*
+  Creación de función para poder graficar la aproximación para cada variable x,y.z
+  */
+  function drawIterations3D(iterations) {
+    pointsLayer.destroyChildren();
+
+    if (!iterations || iterations.length === 0) return;
+
+    let colors = ["red", "blue", "green"];
+
+    for (let v = 0; v < iterations[0].x.length; v++) {
+      let linePoints = [];
+
+      iterations.forEach((step, i) => {
+        const iter = i;
+        const val = step.x[v];
+
+        const screenX = toScreenX(iter);
+        const screenY = toScreenY(val);
+
+        linePoints.push(screenX);
+        linePoints.push(screenY);
+
+        pointsLayer.add(
+          new Konva.Circle({
+            x: screenX,
+            y: screenY,
+            radius: 4,
+            fill: colors[v],
+          }),
+        );
+      });
+
+      if (linePoints.length >= 4) {
+        pointsLayer.add(
+          new Konva.Line({
+            points: linePoints,
+            stroke: colors[v],
+            strokeWidth: 2,
+          }),
+        );
+      }
+    }
+
+    pointsLayer.draw();
+  }
+
   /* =====================================================
      PAN (ARRASTRE MATEMÁTICO)
   ===================================================== */
@@ -428,6 +475,11 @@
         functionLayer.draw();
 
         drawNewtonPath2D(data.history || data.iterations);
+      }else if(data.dimension === 3){
+        functionLayer.destroyChildren();
+        functionLayer.draw();
+
+        drawIterations3D(data.history || data.iterations);
       }
     }
   });
@@ -474,6 +526,10 @@
         functionLayer.draw();
 
         drawNewtonPath2D(data.history || data.iterations);
+      }else if(data.dimension === 3){
+        functionLayer.destroyChildren();
+        functionLayer.draw();
+        drawIterations3D(data.history || data.iterations);
       }
     }
   });
@@ -506,9 +562,13 @@
       }
       drawNewtonPath2D(data.history || data.iterations);
     } else if (dimension === 3) {
-      // Para 3D, se necesitaría una librería diferente o un renderizado personalizado
+      // Para 3D, se necesitaría una librería diferente o un renderizado personalizado, sin embargo, solamente graficamos la evolución
+      // para cada variable (x,y,z)
       window.currentFunction = null;
-      console.warn("Gráficos 3D no implementados en esta versión.");
+      functionLayer.destroyChildren();
+      functionLayer.draw();
+
+      drawIterations3D(data.history || data.iterations);
     }
   };
 })();

@@ -30,37 +30,52 @@ def build_function_and_derivative(function_str):
         raise ValueError(f"Error al procesar la función: {str(e)}")
     
 def parse_matrix_csv(file):
+
     try:
+
         content = file.read().decode("utf-8")
         reader = csv.reader(io.StringIO(content))
-        
+
         matrix = []
-        
+        first_row = True
+
         for row in reader:
-            
-            if not reader:
+
+            if not row:
                 continue
-            
+
+            # limpiar espacios
+            row = [value.strip() for value in row]
+
+            # detectar encabezado
+            if first_row:
+                first_row = False
+                try:
+                    [float(value) for value in row]
+                except ValueError:
+                    # es encabezado → ignorarlo
+                    continue
+
             try:
                 numeric_row = [float(value) for value in row]
             except ValueError:
                 return None, "El archivo contiene valores no numéricos"
-            
+
             matrix.append(numeric_row)
+
         if len(matrix) == 0:
             return None, "El archivo está vacío"
-        
+
         cols = len(matrix[0])
-        
+
         for row in matrix:
-            
             if len(row) != cols:
-                return None, "Las filas del CSV tienen diferentes números de columnas"
+                return None, "Las filas del CSV tienen diferente número de columnas"
+
         return matrix, None
-    except Exception:
-        return None, "No se pudo procesar el archivo."
-    
-    
+
+    except Exception as e:
+        return None, f"No se pudo procesar el archivo: {str(e)}"
 # Además agregamos un función de validación de tamaño para la matriz considerando que debe ser cuadrada, es decir, N x N
 
 def validate_augmented_matrix(matrix):

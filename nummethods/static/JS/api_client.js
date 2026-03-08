@@ -276,7 +276,7 @@ async function solveGauss(event) {
   try{
     const response = await fetch("/api/solve/gauss", {
       method : "POST",
-      headers: { "Content-Type": "application/json" },
+      //headers: { "Content-Type": "application/json" },
       body: formData
     });
 

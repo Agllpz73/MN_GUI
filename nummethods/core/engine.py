@@ -3,6 +3,7 @@ from .methods.biseccion import solve_biseccion
 from .methods.secante import solve_secante
 from .methods.falsa_posicion import solve_falsa_posicion
 from .methods.newton_sistemas import newton_system
+from .methods.punto_fijo_system import punto_fijo_system
 
 def solve(method_name, data):
 
@@ -52,6 +53,14 @@ def solve(method_name, data):
             x0=data["x0"],
             tol=data.get("tol", 1e-6),
             max_iter=data.get("max_iter", 100)
+        )
+    elif method_name == "punto-fijo-sistema":
+        return punto_fijo_system(
+            g_functions = data["variables"],
+            x0=data["x0"],
+            tol = data.get("tol", 1e-6),
+            max_iter = data.get("max_iter", 100),
+            functions = data.get("functions")
         )
 
     raise ValueError("Método no soportado")

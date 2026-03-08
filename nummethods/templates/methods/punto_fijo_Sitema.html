@@ -4,6 +4,7 @@
   class="file-form"
   id="method-form"
 >
+  
   <label class="form-label">
     Número de ecuaciones:
     <span class="help-icon">?</span>
@@ -31,8 +32,10 @@
 
   <label class="form-label">Iteraciones máximas:</label>
   <input type="number" name="max_iter" placeholder="ej. 20" required />
+  <input type="hidden" name="method" value="punto-fijo-sistema" />
 
   <button type="submit" class="primary-btn">Iniciar</button>
+  
 </form>
 <br />
 <div class="method-card">

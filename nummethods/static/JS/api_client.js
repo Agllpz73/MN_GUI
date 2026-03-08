@@ -184,7 +184,7 @@ async function solvePuntoFijo(event) {
 }
 
 async function solveNewtonSistema(event) {
-  event.preventDefault(); // 🔥 MUY IMPORTANTE
+  event.preventDefault();
 
   const formData = new FormData(event.target);
 
@@ -221,6 +221,7 @@ async function solveNewtonSistema(event) {
   }
 }
 
+/*
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
 
@@ -232,4 +233,74 @@ document.addEventListener("DOMContentLoaded", function () {
       solveNewtonSistema(event);
     });
   }
+});
+*/
+
+
+
+async function solvePuntoFijoSystem(event) {
+  event.preventDefault();
+
+  const fromData = new FormData(event.target);
+
+  const payload = {
+    functions: fromData.getAll("functions"),
+    variables: fromData.getAll("variables"),
+    x0: fromData.getAll("x0").map((v) => parseFloat(v)),
+    tol: parseFloat(fromData.get("tol")),
+    max_iter: parseInt(fromData.get("max_iter")),
+  };
+
+  console.log("Payload enviado:", payload); // validación para el correcto funcionamiento para la fase de pruebas
+
+  try {
+    const response = await fetch("/api/solve/punto-fijo-sistema", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const text = await response.text();
+    console.log("Respuesta cruda: ", text);
+
+    const data = JSON.parse(text);
+
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+
+    renderProcedureSystem(data);
+    window.drawNewtonGraph(data);
+  } catch (error) {
+    console.error("Error", error);
+    alert("Error al ejecutar Punto Fijo Sistema de Ecuaciones no Lineales.");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("method-form");
+
+  if (!form) return;
+
+  form.addEventListener("submit", function (event) {
+    const formData = new FormData(form);
+    const method = formData.get("method");
+
+    if (method === "newton") {
+      solveNewton(event);
+    } else if (method === "biseccion") {
+      solveBiseccion(event);
+    } else if (method === "secante") {
+      solveSecante(event);
+    } else if (method === "falsa-posicion") {
+      solveFalsaPosicion(event);
+    } else if (method === "punto-fijo") {
+      solvePuntoFijo(event);
+    } else if (method === "newton-raphson-sistema") {
+      solveNewtonSistema(event);
+    } else if (method === "punto-fijo-sistema") {
+      solvePuntoFijoSystem(event);
+    }
+  });
 });

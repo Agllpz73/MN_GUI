@@ -86,3 +86,63 @@ function renderProcedureSystem(data) {
 
   container.innerHTML = table;
 }
+
+// Diseño de un plotter para Sistema de Ecuaciones Lineales (al menos para Gauss y Gauss - Jordan)
+
+
+function renderProcedureGauss(data) {
+
+    const container = document.getElementById("procedure-output");
+    container.innerHTML = "";
+
+    if (data.status === "error") {
+        container.innerHTML = `<p style="color:red;">${data.message}</p>`;
+        return;
+    }
+
+    const iterations = data.iterations;
+    const solution = data.solution;
+
+    // ---------- PROCEDIMIENTO ----------
+    let html = `<h3>Procedimiento (Eliminación de Gauss)</h3>`;
+
+    iterations.forEach((matrix, step) => {
+
+        html += `<h4>Iteración ${step + 1}</h4>`;
+
+        html += `<table class="matrix-table">`;
+
+        matrix.forEach(row => {
+
+            html += `<tr>`;
+
+            row.forEach((value, index) => {
+
+                if (index === row.length - 1) {
+                    html += `<td class="matrix-b">${value.toFixed(4)}</td>`;
+                } else {
+                    html += `<td>${value.toFixed(4)}</td>`;
+                }
+
+            });
+
+            html += `</tr>`;
+        });
+
+        html += `</table>`;
+    });
+
+    // ---------- SOLUCIÓN ----------
+    html += `<h3>Solución</h3>`;
+    html += `<div class="solution-box">`;
+
+    const variables = ["x", "y", "z"];
+
+    solution.forEach((value, i) => {
+        html += `<p>${variables[i]} = <strong>${value.toFixed(6)}</strong></p>`;
+    });
+
+    html += `</div>`;
+
+    container.innerHTML = html;
+}

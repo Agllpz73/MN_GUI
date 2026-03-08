@@ -4,6 +4,8 @@ from .methods.secante import solve_secante
 from .methods.falsa_posicion import solve_falsa_posicion
 from .methods.newton_sistemas import newton_system
 from .methods.punto_fijo_system import punto_fijo_system
+from .methods.gauss import gauss_elimination
+from .utils.parser import parse_matrix_csv, validate_augmented_matrix
 
 def solve(method_name, data):
 
@@ -62,5 +64,24 @@ def solve(method_name, data):
             max_iter = data.get("max_iter", 100),
             functions = data.get("functions")
         )
+    elif method_name == "gauss":
+        file = data["file"]
+        
+        matrix, error = parse_matrix_csv(file)
+        
+        if error:
+            return{
+                "status" : "error",
+                "message" : error
+            }
+        valid, message = validate_augmented_matrix(matrix)
+        
+        if not valid:
+            return{
+                "status" : "error",
+                "message" : message
+            }
+        return gauss_elimination(matrix)
+        
 
     raise ValueError("Método no soportado")

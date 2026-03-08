@@ -1,4 +1,4 @@
-<form method="POST" enctype="multipart/form-data" class="file-form">
+<form method="POST" enctype="multipart/form-data" class="file-form" id="method-form">
   <label class="form-label">
     Sistema de ecuaciones:
     <span class="help-icon">?</span>
@@ -7,12 +7,13 @@
   <!-- Input real oculto -->
   <input type="file" id="file-input" name="matrix_file" accept=".csv" hidden />
 
-  <!-- Botón visual personalizado -->
+  
   <label for="file-input" class="file-upload-btn">
     Adjunta tu archivo .CSV
   </label>
 
   <span id="file-name" class="file-name"></span>
+  <input type="hidden" name="method" value="gauss">
 
   <button type="submit" class="primary-btn">Iniciar</button>
 </form>

@@ -221,23 +221,9 @@ async function solveNewtonSistema(event) {
   }
 }
 
-/*
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("method-form");
-
-  console.log("Formulario encontrado:", form);
-
-  if (form) {
-    form.addEventListener("submit", function (event) {
-      console.log("Submit capturado");
-      solveNewtonSistema(event);
-    });
-  }
-});
-*/
 
 
-
+// Inicia métodos para Sistemas de Ec. no lienales
 async function solvePuntoFijoSystem(event) {
   event.preventDefault();
 
@@ -278,6 +264,50 @@ async function solvePuntoFijoSystem(event) {
   }
 }
 
+// Inicia método para Sistemas de Ec. Lineales
+
+async function solveGauss(event) {
+
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  try{
+    const response = await fetch("/api/solve/gauss", {
+      method : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: formData
+    });
+
+    /* const text = await response.text();
+
+    console.log("Respuesta cruda: ", text);
+
+    const data = JSON.parse(text);*/
+    
+    if(!response.ok){
+      const errorText = await response.text();
+      console.error("Error del servidor: ", errorText);
+      alert("Error del servidor.");
+      return;
+    }
+
+    const data = await response.json();
+
+    if(data.error || data.status === "error"){
+      alert(data.message || data.error);
+      return;
+    }
+    renderProcedureGauss(data);
+  } catch (error){
+    console.error("Error: ", error);
+    alert("Error al ejecutar el método de Eliminación de Gauss");
+  }
+
+  
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
 
@@ -301,6 +331,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveNewtonSistema(event);
     } else if (method === "punto-fijo-sistema") {
       solvePuntoFijoSystem(event);
+    }else if (method === "gauss") {
+      solveGauss(event)
     }
   });
 });

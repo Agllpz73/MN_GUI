@@ -1080,3 +1080,129 @@ html, body{
   }
 
 }
+
+
+
+/* ===============================
+   FACTORIZATION PROCEDURE (LU / Cholesky)
+================================ */
+
+/* Contenedor general del procedimiento */
+#gauss-procedure-container{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+/* Cada paso del método */
+.step-box{
+  background:#ffffff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:18px;
+}
+
+.step-box h4{
+  margin:0 0 10px 0;
+  font-size:16px;
+  font-weight:600;
+}
+
+/* Resultado final */
+.result-box{
+  border-left:4px solid var(--primary);
+  background:#f8fafc;
+}
+
+/* ===============================
+   MATRICES EN PASOS
+================================ */
+
+.matrix-group{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:30px;
+}
+
+.matrix-product{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:20px;
+}
+
+/* símbolos = y × */
+.matrix-equals,
+.matrix-mult{
+  font-size:26px;
+  font-weight:600;
+  color:#1f2937;
+}
+
+/* ===============================
+   SISTEMA ORIGINAL
+================================ */
+
+.system-equations{
+  font-family:monospace;
+  font-size:14px;
+}
+
+.equation-line{
+  margin:4px 0;
+}
+
+/* ecuaciones tipo Ly=b */
+.equation{
+  font-weight:600;
+  margin-bottom:10px;
+}
+
+/* ===============================
+   VECTOR SOLUCIÓN
+================================ */
+
+.solution-vector{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.solution-item{
+  background:#ffffff;
+  border:1px solid var(--line);
+  padding:8px 14px;
+  border-radius:6px;
+  font-weight:600;
+  font-size:14px;
+}
+.matrix-table {
+    width: auto;
+    border-collapse: collapse;
+}
+
+.matrix-wrapper{
+    display:inline-block;
+}
+
+.matrix-group{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:20px;
+}
+
+.matrix-product{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:20px;
+}
+
+.matrix-equals,
+.matrix-mult{
+    font-size:22px;
+    font-weight:bold;
+    margin:0 10px;
+}

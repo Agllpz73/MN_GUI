@@ -368,3 +368,237 @@ function renderProcedureMatrizInversa(data) {
 
   openGaussModal();
 }
+
+// Render para LU y Cholesky factorización
+
+// funciones para optimizar el render
+function renderSystem(A,b){
+
+    const vars = ["x","y","z","w","v","u"];
+
+    let html = `<div class="system-equations">`;
+
+    for(let i=0;i<A.length;i++){
+
+        let eq = "";
+
+        for(let j=0;j<A[i].length;j++){
+
+            let coef = A[i][j];
+
+            if(j>0 && coef>=0) eq += "+ ";
+
+            eq += `${coef}${vars[j]} `;
+        }
+
+        eq += `= ${b[i]}`;
+
+        html += `<div class="equation-line">${eq}</div>`;
+    }
+
+    html += `</div>`;
+
+    return html;
+}
+function renderSolution(x){
+
+    const vars = ["x","y","z","w","v","u"];
+
+    let html = `<div class="solution-vector">`;
+
+    for(let i=0;i<x.length;i++){
+
+        html += `<div class="solution-item">
+                    ${vars[i]} = ${Number(x[i]).toFixed(6)}
+                 </div>`;
+    }
+
+    html += `</div>`;
+
+    return html;
+}
+
+function renderMatrix(matrix){
+
+    let html = `<div class="matrix-wrapper">`;
+    html += `<table class="matrix-table">`;
+
+    for(let i = 0; i < matrix.length; i++){
+
+        html += `<tr>`;
+
+        for(let j = 0; j < matrix[i].length; j++){
+
+            let value = Number(matrix[i][j]).toFixed(6);
+
+            html += `<td>${value}</td>`;
+        }
+
+        html += `</tr>`;
+    }
+
+    html += `</table>`;
+    html += `</div>`;
+
+    return html;
+}
+
+function renderVector(vector){
+
+    let html = `<div class="matrix-wrapper">`;
+    html += `<table class="matrix-table">`;
+
+    for(let i = 0; i < vector.length; i++){
+
+        let value = Number(vector[i]).toFixed(6);
+
+        html += `<tr><td>${value}</td></tr>`;
+    }
+
+    html += `</table>`;
+    html += `</div>`;
+
+    return html;
+}
+
+function renderFactorization(data){
+
+    const {
+        method,
+        A,
+        factor1,
+        factor2,
+        factor1_name,
+        factor2_name,
+        b,
+        y,
+        x,
+        forward_equation,
+        backward_equation
+    } = data;
+
+    let html = "";
+
+    html += `<div class="solution-box">`;
+    html += `<h3>Método de ${method}</h3>`;
+
+
+    /* PASO 1 */
+    html += `<div class="step-box">`;
+    html += `<h4>Paso 1: Sistema original</h4>`;
+    html += renderSystem(A,b);
+    html += `</div>`;
+
+
+    /* PASO 2 */
+    html += `<div class="step-box">`;
+    html += `<h4>Paso 2: Separación de matrices</h4>`;
+
+    html += `<div class="matrix-group">`;
+
+    html += `<div>`;
+    html += `<p>Matriz A</p>`;
+    html += renderMatrix(A);
+    html += `</div>`;
+
+    html += `<div>`;
+    html += `<p>Vector b</p>`;
+    html += renderVector(b);
+    html += `</div>`;
+
+    html += `</div>`;
+    html += `</div>`;
+
+
+    /* PASO 3 */
+    html += `<div class="step-box">`;
+    html += `<h4>Paso 3: Factorización</h4>`;
+
+    html += `<div class="matrix-product">`;
+
+    html += `<div>`;
+    html += `<p>A</p>`;
+    html += renderMatrix(A);
+    html += `</div>`;
+
+    html += `<span class="matrix-equals">=</span>`;
+
+    html += `<div>`;
+    html += `<p>${factor1_name}</p>`;
+    html += renderMatrix(factor1);
+    html += `</div>`;
+
+    html += `<span class="matrix-mult">×</span>`;
+
+    html += `<div>`;
+    html += `<p>${factor2_name}</p>`;
+    html += renderMatrix(factor2);
+    html += `</div>`;
+
+    html += `</div>`;
+    html += `</div>`;
+
+
+    /* PASO 4 */
+    html += `<div class="step-box">`;
+    html += `<h4>Paso 4: Sustitución hacia adelante</h4>`;
+    html += `<p class="equation">${forward_equation}</p>`;
+
+    html += `<div class="matrix-group">`;
+
+    html += `<div>`;
+    html += `<p>${factor1_name}</p>`;
+    html += renderMatrix(factor1);
+    html += `</div>`;
+
+    html += `<div>`;
+    html += `<p>b</p>`;
+    html += renderVector(b);
+    html += `</div>`;
+
+    html += `<div>`;
+    html += `<p>y</p>`;
+    html += renderVector(y);
+    html += `</div>`;
+
+    html += `</div>`;
+    html += `</div>`;
+
+
+    /* PASO 5 */
+    html += `<div class="step-box">`;
+    html += `<h4>Paso 5: Sustitución hacia atrás</h4>`;
+    html += `<p class="equation">${backward_equation}</p>`;
+
+    html += `<div class="matrix-group">`;
+
+    html += `<div>`;
+    html += `<p>${factor2_name}</p>`;
+    html += renderMatrix(factor2);
+    html += `</div>`;
+
+    html += `<div>`;
+    html += `<p>y</p>`;
+    html += renderVector(y);
+    html += `</div>`;
+
+    html += `<div>`;
+    html += `<p>x</p>`;
+    html += renderVector(x);
+    html += `</div>`;
+
+    html += `</div>`;
+    html += `</div>`;
+
+
+    /* RESULTADO */
+    html += `<div class="step-box result-box">`;
+    html += `<h4>Solución del sistema</h4>`;
+    html += renderSolution(x);
+    html += `</div>`;
+
+    html += `</div>`;
+
+    return html;
+}
+

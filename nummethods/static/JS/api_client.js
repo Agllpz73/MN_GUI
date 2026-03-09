@@ -375,6 +375,45 @@ async function solveMatrizInversa(event) {
   }
 }
 
+// Factorización LU
+async function solveFactorizacionLU(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("/api/solve/lu", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error del servidor: ", errorText);
+
+      alert("Error del servidor");
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.error || data.status === "error") {
+      alert(data.message || data.error);
+      return;
+    }
+
+    const container = document.getElementById("gauss-procedure-container");
+
+    container.innerHTML = renderFactorization(data);
+
+    openGaussModal();
+  } catch (error) {
+    console.error("Error: ", error);
+    alert("Error al ejecutar factorización LU.");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
 
@@ -404,6 +443,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveGaussJordan(event);
     } else if (method === "matriz-inversa") {
       solveMatrizInversa(event);
+    } else if (method === "lu") {
+      solveFactorizacionLU(event);
     }
   });
 });

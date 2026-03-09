@@ -7,6 +7,7 @@ from .methods.punto_fijo_system import punto_fijo_system
 from .methods.gauss import gauss_elimination
 from .methods.gauss_jordan import gauss_jordan
 from .methods.matriz_inversa import matriz_inversa_gauss_jordan
+from .methods.LU import metodo_lu
 from .utils.parser import parse_matrix_csv, validate_augmented_matrix
 
 def solve(method_name, data):
@@ -122,5 +123,26 @@ def solve(method_name, data):
             }
         
         return matriz_inversa_gauss_jordan(matrix)
+    elif method_name == "lu":
+        file = data["file"]
+        
+        matrix, error = parse_matrix_csv(file)
+        
+        if error:
+            return {
+                "status" : "error",
+                "message" : error
+            }
+        
+        valid, message = validate_augmented_matrix(matrix)
+        
+        if not valid:
+            return{
+                "status" : "error",
+                "message" : message
+            }
+        
+        return metodo_lu(matrix)
+    
 
     raise ValueError("Método no soportado")

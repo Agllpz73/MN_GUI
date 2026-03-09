@@ -148,7 +148,6 @@ function renderProcedureGauss(data) {
 
 */
 function openGaussModal() {
-
   const modal = document.getElementById("gauss-modal");
   const closeBtn = document.querySelector(".close-gauss");
 
@@ -163,29 +162,86 @@ function openGaussModal() {
       modal.style.display = "none";
     }
   };
-
 }
 
 function renderProcedureGauss(data) {
-
   const container = document.getElementById("gauss-procedure-container");
   container.innerHTML = "";
 
   let html = `<div class="gauss-steps">`;
 
   data.iterations.forEach((matrix, step) => {
-
     html += `<div class="gauss-step">`;
     html += `<h3>Iteración ${step + 1}</h3>`;
+    html += `<table class="matrix-table">`;
+
+    matrix.forEach((row) => {
+      html += `<tr>`;
+
+      row.forEach((value, index) => {
+        if (index === row.length - 1) {
+          html += `<td class="matrix-b">${value.toFixed(4)}</td>`;
+        } else {
+          html += `<td>${value.toFixed(4)}</td>`;
+        }
+      });
+
+      html += `</tr>`;
+    });
+
+    html += `</table>`;
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+
+  html += `<div class="solution-box">`;
+  html += `<h3>Solución</h3>`;
+
+  const vars = ["x", "y", "z"];
+
+  data.solution.forEach((value, i) => {
+    html += `<p>${vars[i]} = <strong>${value.toFixed(6)}</strong></p>`;
+  });
+
+  html += `</div>`;
+
+  container.innerHTML = html;
+
+  openGaussModal();
+}
+
+// Experimento para GAUSS - JORDAN
+
+function renderProcedureGaussJordan(data) {
+
+  const container = document.getElementById("gauss-procedure-container");
+  container.innerHTML = "";
+
+  let html = `<div class="gauss-steps">`;
+
+  data.iterations.forEach((step, index) => {
+
+    const matrix = step.matrix;
+    const operation = step.operations;
+
+    html += `<div class="gauss-step">`;
+
+    html += `<h3>Paso ${index + 1}</h3>`;
+
+    if(operation){
+      html += `<div class="row-operation">${operation}</div>`;
+    }
+
     html += `<table class="matrix-table">`;
 
     matrix.forEach(row => {
 
       html += `<tr>`;
 
-      row.forEach((value, index) => {
+      row.forEach((value, colIndex) => {
 
-        if(index === row.length - 1){
+        if(colIndex === row.length - 1){
           html += `<td class="matrix-b">${value.toFixed(4)}</td>`;
         } else {
           html += `<td>${value.toFixed(4)}</td>`;

@@ -964,3 +964,23 @@ html, body{
     font-size:16px;
     margin-bottom:8px;
 }
+
+.gauss-steps{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr); /* máximo 3 por fila */
+    gap:30px;
+    margin-bottom:20px;
+}
+
+.row-operation{
+    font-weight:600;
+    margin-bottom:6px;
+    font-size:14px;
+    color:#1f2937;
+}
+.row-operation{
+    font-weight:600;
+    margin-bottom:6px;
+    font-size:14px;
+    color:#1f2937;
+}

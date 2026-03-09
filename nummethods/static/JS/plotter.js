@@ -214,14 +214,12 @@ function renderProcedureGauss(data) {
 // Experimento para GAUSS - JORDAN
 
 function renderProcedureGaussJordan(data) {
-
   const container = document.getElementById("gauss-procedure-container");
   container.innerHTML = "";
 
   let html = `<div class="gauss-steps">`;
 
   data.iterations.forEach((step, index) => {
-
     const matrix = step.matrix;
     const operation = step.operations;
 
@@ -229,33 +227,28 @@ function renderProcedureGaussJordan(data) {
 
     html += `<h3>Paso ${index + 1}</h3>`;
 
-    if(operation){
+    if (operation) {
       html += `<div class="row-operation">${operation}</div>`;
     }
 
     html += `<table class="matrix-table">`;
 
-    matrix.forEach(row => {
-
+    matrix.forEach((row) => {
       html += `<tr>`;
 
       row.forEach((value, colIndex) => {
-
-        if(colIndex === row.length - 1){
+        if (colIndex === row.length - 1) {
           html += `<td class="matrix-b">${value.toFixed(4)}</td>`;
         } else {
           html += `<td>${value.toFixed(4)}</td>`;
         }
-
       });
 
       html += `</tr>`;
-
     });
 
     html += `</table>`;
     html += `</div>`;
-
   });
 
   html += `</div>`;
@@ -263,12 +256,112 @@ function renderProcedureGaussJordan(data) {
   html += `<div class="solution-box">`;
   html += `<h3>Solución</h3>`;
 
-  const vars = ["x","y","z"];
+  const vars = ["x", "y", "z"];
 
-  data.solution.forEach((value,i)=>{
+  data.solution.forEach((value, i) => {
     html += `<p>${vars[i]} = <strong>${value.toFixed(6)}</strong></p>`;
   });
 
+  html += `</div>`;
+
+  container.innerHTML = html;
+
+  openGaussModal();
+}
+
+// Render para matriz inversa
+
+function renderProcedureMatrizInversa(data) {
+  const container = document.getElementById("gauss-procedure-container");
+  container.innerHTML = "";
+
+  let html = `<div class="gauss-steps">`;
+
+  data.iterations.forEach((step, index) => {
+    const matrix = step.matrix;
+    const operation = step.operations;
+
+    html += `<div class="gauss-step">`;
+
+    html += `<h3>Paso ${index + 1}</h3>`;
+
+    if (operation) {
+      html += `<div class="row-operation">${operation}</div>`;
+    }
+
+    html += `<table class="matrix-table">`;
+
+    matrix.forEach((row) => {
+      html += `<tr>`;
+
+      row.forEach((value, colIndex) => {
+        if (colIndex === row.length - 1) {
+          html += `<td class="matrix-b">${value.toFixed(4)}</td>`;
+        } else {
+          html += `<td>${value.toFixed(4)}</td>`;
+        }
+      });
+
+      html += `</tr>`;
+    });
+
+    html += `</table>`;
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+
+  /* -------- PRODUCTO X = A⁻¹ B -------- */
+
+  html += `<div class="solution-box">`;
+  html += `<h3>Producto X = A⁻¹ B</h3>`;
+
+  html += `<div class="matrix-product">`;
+
+  /* MATRIZ INVERSA */
+  html += `<table class="matrix-product-table">`;
+
+  data.inverse.forEach((row) => {
+    html += `<tr>`;
+    row.forEach((value) => {
+      html += `<td>${value.toFixed(4)}</td>`;
+    });
+    html += `</tr>`;
+  });
+
+  html += `</table>`;
+
+  /* símbolo multiplicación */
+  html += `<span class="matrix-multiply">×</span>`;
+
+  /* VECTOR B */
+  html += `<table class="matrix-product-table vector-b">`;
+
+  data.vector_b.forEach((value) => {
+    html += `<tr>`;
+    html += `<td>${value.toFixed(4)}</td>`;
+    html += `</tr>`;
+  });
+
+  html += `</table>`;
+  html += `<span class="matrix-multiply">=</span>`;
+  const vars = ["x", "y", "z"];
+
+  html += `<table class="matrix-product-table vector-b">`;
+
+  data.solution.forEach((value, i) => {
+    html += `<tr>`;
+    html += `<td>${vars[i]} = <strong>${value.toFixed(6)}</strong></td>`;
+    html += `</tr>`;
+  });
+
+  html += `</table>`;
+  /*data.solution.forEach((value, i) => {
+    html += `<p>${vars[i]} = <strong>${value.toFixed(6)}</strong></p>`;
+  }); */
+  
+
+  html += `</div>`;
   html += `</div>`;
 
   container.innerHTML = html;

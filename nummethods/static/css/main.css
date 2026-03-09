@@ -911,7 +911,7 @@ html, body{
   background:white;
   margin:5% auto;
   padding:25px;
-  width:70%;
+  width: clamp(700px, 80vw, 1400px);
   border-radius:10px;
   max-height:80vh;
   overflow-y:auto;
@@ -923,41 +923,85 @@ html, body{
   cursor:pointer;
 }
 
-/* contenedor de pasos */
+/* ===== CONTENEDOR DE PASOS ===== */
+
 .gauss-steps{
-    display:flex;
-    gap:30px;
-    overflow-x:auto;
-    padding-bottom:10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
-/* cada paso */
+/* limitar a máximo 3 columnas en pantallas grandes */
+@media (min-width: 1200px){
+  .gauss-steps{
+      grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 2 columnas si el espacio lo permite */
+@media (max-width: 1199px) and (min-width: 700px){
+  .gauss-steps{
+      grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 1 columna en pantallas pequeñas */
+@media (max-width: 699px){
+  .gauss-steps{
+      grid-template-columns: 1fr;
+  }
+}
+
+/* ===== CADA PASO ===== */
+
 .gauss-step{
-    min-width:160px;
+    width: 100%;
+    min-width: 0;
 }
 
-/* tu estilo existente */
+/* ===== TABLA MATRIZ ===== */
+
 .matrix-table{
-    border-collapse:collapse;
-    margin-top:10px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    table-layout: fixed;
 }
 
 .matrix-table td{
-    border:1px solid #ccc;
-    padding:6px 12px;
-    text-align:center;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    text-align: center;
+    font-size: clamp(12px, 0.9vw, 14px);
 }
 
+/* línea del vector B */
 .matrix-b{
-    border-left:3px solid black;
+    border-left: 3px solid black;
 }
+
+/* ===== OPERACIÓN ===== */
+
+.row-operation{
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #1f2937;
+}
+
+/* ===== SOLUCIÓN ===== */
 
 .solution-box{
-    display: inline-block;   /* evita que ocupe todo el ancho */
-    margin-top:25px;
-    background:#f5f5f5;
-    padding:15px 20px;
-    border-radius:6px;
+    display: inline-block;
+    margin-top: 25px;
+    background: #f5f5f5;
+    padding: 15px 20px;
+    border-radius: 6px;
+
+    width: fit-content;
+    max-width: 100%;
 }
 .gauss-step h3{
     text-align:center;
@@ -983,4 +1027,56 @@ html, body{
     margin-bottom:6px;
     font-size:14px;
     color:#1f2937;
+}
+
+
+/* ===== PRODUCTO MATRIZ INVERSA ===== */
+
+.matrix-product{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:25px;
+    margin-top:15px;
+    flex-wrap:wrap;
+}
+
+/* tablas del producto */
+.matrix-product-table{
+    border-collapse:collapse;
+    background:#fff;
+}
+
+.matrix-product-table td{
+    border:1px solid #ccc;
+    padding:8px 14px;
+    text-align:center;
+    font-size:14px;
+}
+
+/* vector B más angosto */
+.vector-b td{
+    min-width:80px;
+}
+
+/* símbolo de multiplicación */
+.matrix-multiply{
+    font-size:28px;
+    font-weight:600;
+    color:#1f2937;
+}
+
+/* responsive */
+@media (max-width:700px){
+
+  .matrix-product{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:12px;
+  }
+
+  .matrix-multiply{
+      font-size:22px;
+  }
+
 }

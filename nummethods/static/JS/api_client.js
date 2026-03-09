@@ -221,8 +221,6 @@ async function solveNewtonSistema(event) {
   }
 }
 
-
-
 // Inicia métodos para Sistemas de Ec. no lienales
 async function solvePuntoFijoSystem(event) {
   event.preventDefault();
@@ -267,17 +265,16 @@ async function solvePuntoFijoSystem(event) {
 // Inicia método para Sistemas de Ec. Lineales
 
 async function solveGauss(event) {
-
   event.preventDefault();
 
   const form = document.getElementById("method-form");
   const formData = new FormData(form);
 
-  try{
+  try {
     const response = await fetch("/api/solve/gauss", {
-      method : "POST",
+      method: "POST",
       //headers: { "Content-Type": "application/json" },
-      body: formData
+      body: formData,
     });
 
     /* const text = await response.text();
@@ -285,8 +282,8 @@ async function solveGauss(event) {
     console.log("Respuesta cruda: ", text);
 
     const data = JSON.parse(text);*/
-    
-    if(!response.ok){
+
+    if (!response.ok) {
       const errorText = await response.text();
       console.error("Error del servidor: ", errorText);
       alert("Error del servidor.");
@@ -295,17 +292,15 @@ async function solveGauss(event) {
 
     const data = await response.json();
 
-    if(data.error || data.status === "error"){
+    if (data.error || data.status === "error") {
       alert(data.message || data.error);
       return;
     }
     renderProcedureGauss(data);
-  } catch (error){
+  } catch (error) {
     console.error("Error: ", error);
     alert("Error al ejecutar el método de Eliminación de Gauss");
   }
-
-  
 }
 
 // Gaus Jordan
@@ -317,32 +312,66 @@ async function solveGaussJordan(event) {
   const formData = new FormData(form);
 
   try {
-
     const response = await fetch("/api/solve/gauss-jordan", {
-      method : "POST",
-      body: formData
+      method: "POST",
+      body: formData,
     });
 
-    if(!response.ok){
+    if (!response.ok) {
       const errorText = await response.text();
       console.error("Error del servidor: ", errorText);
-      
+
       alert("Error del servidor");
       return;
     }
 
     const data = await response.json();
 
-    if(data.error || data.status === "error" ){
+    if (data.error || data.status === "error") {
       alert(data.message || data.error);
       return;
     }
 
     renderProcedureGaussJordan(data);
-
-  }catch (error){
+  } catch (error) {
     console.error("Error: ", error);
-    alert("Error al ejecutar Gauss-Jordan.")
+    alert("Error al ejecutar Gauss-Jordan.");
+  }
+}
+
+//Matriz inversa
+
+async function solveMatrizInversa(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("/api/solve/matriz-inversa", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error del servidor: ", errorText);
+
+      alert("Error del servidor");
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.error || data.status === "error") {
+      alert(data.message || data.error);
+      return;
+    }
+
+    renderProcedureMatrizInversa(data);
+  } catch (error) {
+    console.error("Error: ", error);
+    alert("Error al ejecutar Matriz Inversa.");
   }
 }
 
@@ -369,10 +398,12 @@ document.addEventListener("DOMContentLoaded", function () {
       solveNewtonSistema(event);
     } else if (method === "punto-fijo-sistema") {
       solvePuntoFijoSystem(event);
-    }else if (method === "gauss") {
+    } else if (method === "gauss") {
       solveGauss(event);
-    }else if (method === "gauss-jordan"){
+    } else if (method === "gauss-jordan") {
       solveGaussJordan(event);
+    } else if (method === "matriz-inversa") {
+      solveMatrizInversa(event);
     }
   });
 });

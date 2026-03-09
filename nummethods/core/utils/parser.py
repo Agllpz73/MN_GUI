@@ -67,10 +67,13 @@ def parse_matrix_csv(file):
             return None, "El archivo está vacío"
 
         cols = len(matrix[0])
-
+        
+        if cols < 2:
+            return None, "La matriz debe contener al menos dos columnas numéricas"
         for row in matrix:
             if len(row) != cols:
                 return None, "Las filas del CSV tienen diferente número de columnas"
+            
 
         return matrix, None
 

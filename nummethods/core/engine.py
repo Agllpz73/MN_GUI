@@ -9,6 +9,7 @@ from .methods.gauss_jordan import gauss_jordan
 from .methods.matriz_inversa import matriz_inversa_gauss_jordan
 from .methods.LU import metodo_lu
 from .methods.cholesky import metodo_cholesky
+from .methods.gauss_seidel_system import gauss_seidel_system
 from .utils.parser import parse_matrix_csv, validate_augmented_matrix
 
 def solve(method_name, data):
@@ -163,7 +164,35 @@ def solve(method_name, data):
                 "message" : message
             }
         
-        return metodo_cholesky(matrix)
+        
+        return metodo_cholesky(matrix) 
+    elif method_name == "gauss-seidel":
+        file = data["file"]
+        
+        matrix, error = parse_matrix_csv(file)
+        
+        if error:
+            return {
+                "status" : "error",
+                "message" : error
+            }
+        
+        valid, message = validate_augmented_matrix(matrix)
+        
+        if not valid:
+            return{
+                "status" : "error",
+                "message" : message
+            }
+        
+        
+        return gauss_seidel_system(
+            matrix,
+            x0=data.get("x0"),
+            tol=data.get("tol"),
+            max_iter=data.get("max_iter")
+        )
+        
     
 
     raise ValueError("Método no soportado")

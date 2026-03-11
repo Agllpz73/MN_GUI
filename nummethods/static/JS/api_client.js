@@ -409,6 +409,7 @@ async function solveFactorizacionLU(event) {
 
     openGaussModal();
   } catch (error) {
+    4;
     console.error("Error: ", error);
     alert("Error al ejecutar factorización LU.");
   }
@@ -452,6 +453,37 @@ async function solveFactorizacionCholesky(event) {
   }
 }
 
+// Categoría Iterativas
+
+async function solveGaussSeidel(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  
+
+  try {
+    const response = await fetch("/api/solve/gauss-seidel", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.error || data.status === "error") {
+      alert(data.message || data.error);
+      return;
+    }
+
+    renderProcedureSystem(data);
+    window.drawNewtonGraph(data);
+  } catch (error) {
+    console.error(error);
+    alert("Error al ejecutar Gauss-Seidel");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
 
@@ -483,8 +515,10 @@ document.addEventListener("DOMContentLoaded", function () {
       solveMatrizInversa(event);
     } else if (method === "lu") {
       solveFactorizacionLU(event);
-    }else if (method === "cholesky"){
-      solveFactorizacionCholesky(event)
+    } else if (method === "cholesky") {
+      solveFactorizacionCholesky(event);
+    } else if (method === "gauss-seidel") {
+      solveGaussSeidel(event);
     }
   });
 });

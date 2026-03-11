@@ -89,3 +89,26 @@ def validate_augmented_matrix(matrix):
         return False, "La matriz debe tener n ecuaciones y n+1 columnas (matriz aumentada)"
     
     return True, None
+
+
+"""
+Función que nos ayuda a validar si tiene una diagonal dominante para garantizar convergencia en Gauss-Seidel y Jacobi
+"""
+
+def is_diagonally_dominant(matrix):
+
+    n = len(matrix)
+
+    for i in range(n):
+
+        diag = abs(matrix[i][i])
+
+        row_sum = 0
+        for j in range(n):
+            if i != j:
+                row_sum += abs(matrix[i][j])
+
+        if diag <= row_sum:
+            return False
+
+    return True

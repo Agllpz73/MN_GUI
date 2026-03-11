@@ -7,11 +7,7 @@ Nota importante para este método, mantenemos el mismo return que la cateogria d
 
 def gauss_seidel_system(matrix, x0, tol, max_iter):
     
-    print("matrix:", matrix)
-    print("shape:", np.array(matrix).shape)
-    print("x0:", x0)
-    print("tol: ", tol)
-    print("max_iter", max_iter)
+    
     matrix = np.array(matrix, dtype=float)
 
     n = len(matrix)
@@ -24,6 +20,30 @@ def gauss_seidel_system(matrix, x0, tol, max_iter):
 
     history = []
     function_plot = None
+    # convertimos a función
+    if n == 2:
+        function_plot = []
+        variables = ["x", "y"]
+    
+        for i in range(n):
+            terms = []
+    
+            for j in range(n):
+                coef = A[i][j]
+    
+                if coef == 0:
+                    continue
+                
+                if coef == 1:
+                    terms.append(f"{variables[j]}")
+                elif coef == -1:
+                    terms.append(f"-{variables[j]}")
+                else:
+                    terms.append(f"{coef}*{variables[j]}")
+    
+            lhs = " + ".join(terms).replace("+ -", "- ")
+            function_plot.append(f"{lhs} - ({b[i]})")
+    
 
     # verificar dominancia diagonal
     diagonal_dominant = is_diagonally_dominant(A)

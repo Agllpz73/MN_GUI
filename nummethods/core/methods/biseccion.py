@@ -1,7 +1,7 @@
 from ..utils.parser import build_function_and_derivative
 
 def solve_biseccion(function_str, a, b, tol, max_iter):
-
+    
     try:
         f, _ = build_function_and_derivative(function_str)
     except Exception as e:

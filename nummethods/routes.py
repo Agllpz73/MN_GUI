@@ -214,28 +214,45 @@ Sección de rutas para la API REST
 """
 
 
-
-
 @main_bp.route("/api/solve/<method>", methods=["POST"])
 def solve_api(method):
 
-    
-
     try:
+
+        # CASO 1: métodos que envían JSON
         if request.is_json:
-            data = request.json()
-        else: 
+            data = request.get_json()
+
+        # CASO 2: métodos que envían FormData (CSV)
+        else:
             file = request.files.get("matrix_file")
+
             if not file:
                 return jsonify({
-                    "error" : "No se envio archivo .CSV"
+                    "error": "No se envió archivo .CSV"
                 }), 400
-                
+
             data = {
-                "file" : file
+                "file": file
             }
+
+            # leer parámetros adicionales si existen
+            x0 = request.form.getlist("x0")
+            if x0:
+                data["x0"] = [float(v) for v in x0]
+
+            tol = request.form.get("tol")
+            if tol:
+                data["tol"] = float(tol)
+
+            max_iter = request.form.get("max_iter")
+            if max_iter:
+                data["max_iter"] = int(max_iter)
+
         result = solve(method, data)
+
         return jsonify(result)
+
     except Exception as e:
         return jsonify({
             "error": str(e)

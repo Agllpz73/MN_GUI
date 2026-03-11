@@ -461,8 +461,6 @@ async function solveGaussSeidel(event) {
   const form = document.getElementById("method-form");
   const formData = new FormData(form);
 
-  
-
   try {
     const response = await fetch("/api/solve/gauss-seidel", {
       method: "POST",
@@ -481,6 +479,33 @@ async function solveGaussSeidel(event) {
   } catch (error) {
     console.error(error);
     alert("Error al ejecutar Gauss-Seidel");
+  }
+}
+
+async function solveJacobi(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("/api/solve/jacobi", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.error || data.status === "error") {
+      alert(data.message || data.error);
+      return;
+    }
+
+    renderProcedureSystem(data);
+    window.drawNewtonGraph(data);
+  } catch (error) {
+    console.error(error);
+    alert("Error al ejecutar Jacobi.");
   }
 }
 
@@ -519,6 +544,9 @@ document.addEventListener("DOMContentLoaded", function () {
       solveFactorizacionCholesky(event);
     } else if (method === "gauss-seidel") {
       solveGaussSeidel(event);
+    }else if (method === "jacobi"){
+      solveJacobi(event);
+
     }
   });
 });

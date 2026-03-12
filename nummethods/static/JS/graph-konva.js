@@ -237,19 +237,58 @@
       const screenX = toScreenX(x);
       const screenY = toScreenY(y);
 
-      const circle = new Konva.Circle({
-        x: screenX,
-        y: screenY,
-        radius: 5,
-        fill: "red",
-      });
+      // Punto interpolado
+      if (step.type === "interpolated") {
+        const interpolatedPoint = new Konva.Circle({
+          x: screenX,
+          y: screenY,
+          radius: 6,
+          fill: "green",
+          stroke: "black",
+          strokeWidth: 1,
+        });
 
-      pointsLayer.add(circle);
+        pointsLayer.add(interpolatedPoint);
+      }
+      // Puntos originales del CSV
+      else {
+        const dataPoint = new Konva.Circle({
+          x: screenX,
+          y: screenY,
+          radius: 5,
+          fill: "red",
+          stroke: "black",
+          strokeWidth: 1,
+        });
 
-      linePoints.push(screenX);
-      linePoints.push(screenY);
+        pointsLayer.add(dataPoint);
+
+        // solo estos puntos forman la línea roja
+        linePoints.push(screenX);
+        linePoints.push(screenY);
+      }
     });
 
+    // Línea roja únicamente entre los puntos originales
+    if (linePoints.length >= 4) {
+      const line = new Konva.Line({
+        points: linePoints,
+        stroke: "red",
+        strokeWidth: 2,
+        lineCap: "round",
+        lineJoin: "round",
+      });
+
+      // la línea primero
+      pointsLayer.add(line);
+      // luego volvemos a dibujar los puntos para que queden encima
+      pointsLayer.moveToTop();
+    }
+
+    // Volver a dibujar los puntos encima de la línea
+    pointsLayer.destroyChildren();
+
+    // primero la línea
     if (linePoints.length >= 4) {
       const line = new Konva.Line({
         points: linePoints,
@@ -262,9 +301,37 @@
       pointsLayer.add(line);
     }
 
-    // 🔥 FORZAR QUE LOS PUNTOS ESTÉN ENCIMA
-    pointsLayer.moveToTop();
+    // luego todos los puntos encima
+    iterations.forEach((step) => {
+      const x = Number(step.x);
+      const y = Number(step.fx);
 
+      if (!isFinite(x) || !isFinite(y)) return;
+
+      const screenX = toScreenX(x);
+      const screenY = toScreenY(y);
+
+      let color = "red";
+      let radius = 5;
+
+      if (step.type === "interpolated") {
+        color = "green";
+        radius = 6;
+      }
+
+      const circle = new Konva.Circle({
+        x: screenX,
+        y: screenY,
+        radius: radius,
+        fill: color,
+        stroke: "black",
+        strokeWidth: 1,
+      });
+
+      pointsLayer.add(circle);
+    });
+
+    pointsLayer.moveToTop();
     pointsLayer.draw();
   }
   // Funcion para dibujar la función en dos dimensiones, por ahora solo se implementa para 1D pero se deja la estructura para futuras mejoras
@@ -475,7 +542,7 @@
         functionLayer.draw();
 
         drawNewtonPath2D(data.history || data.iterations);
-      }else if(data.dimension === 3){
+      } else if (data.dimension === 3) {
         functionLayer.destroyChildren();
         functionLayer.draw();
 
@@ -526,7 +593,7 @@
         functionLayer.draw();
 
         drawNewtonPath2D(data.history || data.iterations);
-      }else if(data.dimension === 3){
+      } else if (data.dimension === 3) {
         functionLayer.destroyChildren();
         functionLayer.draw();
         drawIterations3D(data.history || data.iterations);

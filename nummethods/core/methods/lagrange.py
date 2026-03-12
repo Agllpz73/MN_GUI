@@ -10,14 +10,17 @@ def solve_lagrange(file, interpolation_value):
     if df.shape[1] < 2:
         raise ValueError("El archivo debe contener dos columnas (x,y)")
 
-    x = df.iloc[:,0].astype(float).to_numpy()
-    y = df.iloc[:,1].astype(float).to_numpy()
+    x = df.iloc[:, 0].astype(float).to_numpy()
+    y = df.iloc[:, 1].astype(float).to_numpy()
+
+    if len(np.unique(x)) != len(x):
+        raise ValueError("Los valores de x no deben repetirse para interpolación de Lagrange")
 
     x_eval = float(interpolation_value)
     n = len(x)
 
     data_section = {
-        "headers": ["x","y"],
+        "headers": ["x", "y"],
         "rows": [[float(x[i]), float(y[i])] for i in range(n)]
     }
 
@@ -28,22 +31,20 @@ def solve_lagrange(file, interpolation_value):
 
     steps = []
     polynomial_terms = []
-    result = 0
+    result = 0.0
 
     for i in range(n):
 
         numerator_terms = []
         denominator_terms = []
 
-        Li = 1
+        Li = 1.0
 
         for j in range(n):
 
             if i != j:
-
                 numerator_terms.append(format_term(x[j]))
-                denominator_terms.append(f"({x[i]}-{x[j]})".replace("--","+"))
-
+                denominator_terms.append(f"({x[i]}-{x[j]})".replace("--", "+"))
                 Li *= (x_eval - x[j]) / (x[i] - x[j])
 
         term = y[i] * Li
@@ -64,50 +65,50 @@ def solve_lagrange(file, interpolation_value):
         "steps": steps
     }
 
-    polynomial_expression = " + ".join(polynomial_terms)
-
-    
+    polynomial_expression = " + ".join(polynomial_terms).replace("+ -", "- ")
 
     evaluation_section = {
         "x": x_eval,
         "result": float(result)
     }
 
+    function_section = {
+        "title": "Polinomio interpolante",
+        "expression": f"P(x) = {polynomial_expression}"
+    }
+
     # puntos para el plotter
-    # puntos para el plotter (los datos originales)
     iterations = []
 
+    # puntos originales del CSV
     for i in range(len(x)):
         iterations.append({
             "iteration": i + 1,
             "x": float(x[i]),
             "fx": float(y[i]),
-            "error": 0
+            "error": 0,
+            "type": "data"
         })
-    function_section = {
-    "title": "Polinomio interpolante",
-    "expression": f"P(x) = {polynomial_expression}"
-    }
-    
 
-    # agregar punto interpolado
+    # punto interpolado
     iterations.append({
         "iteration": len(iterations) + 1,
         "x": float(x_eval),
         "fx": float(result),
-        "error": 0
+        "error": 0,
+        "type": "interpolated"
     })
-    
+
     print(polynomial_expression.replace("**", "^"))
+
     return {
         "method": "lagrange",
-
         "data": data_section,
         "model": model_section,
         "development": development_section,
         "function": function_section,
         "evaluation": evaluation_section,
         "dimension": 1,
-        "function_str": polynomial_expression.replace("**","^"),
+        "function_str": polynomial_expression.replace("**", "^"),
         "iterations": iterations
     }

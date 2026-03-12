@@ -139,8 +139,7 @@ def method_view(category, method):
     "lu",
     "cholesky",
     "gauss-seidel",
-    "jacobi",
-    "lagrange"
+    "jacobi"
     }
 
 

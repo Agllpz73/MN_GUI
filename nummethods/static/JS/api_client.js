@@ -508,8 +508,11 @@ async function solveJacobi(event) {
     alert("Error al ejecutar Jacobi.");
   }
 }
-// Categoría de interpolación
+/*
+  Categoríuas para Interpolación
+*/
 
+//Lagrange
 async function solveLagrange(event) {
   event.preventDefault();
 
@@ -538,6 +541,37 @@ async function solveLagrange(event) {
     alert("Error al ejecutar Lagrange.");
   }
 }
+
+// Newton Diferencias Divididas
+async function solveNewtonDD(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("/api/solve/newton-dd", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.error || data.status === "error") {
+      alert(data.message || data.error);
+      return;
+    }
+
+    renderInterpolation(data);
+
+    // 🔥 aquí se activa la gráfica
+    window.drawNewtonGraph(data);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error al ejecutar Newton Diferencias Divididas");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
 
@@ -577,6 +611,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveJacobi(event);
     } else if (method === "lagrange") {
       solveLagrange(event);
+    }else if (method === "newton-dd"){
+      solveNewtonDD(event);
     }
   });
 });

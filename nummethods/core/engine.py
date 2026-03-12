@@ -11,6 +11,7 @@ from .methods.LU import metodo_lu
 from .methods.cholesky import metodo_cholesky
 from .methods.gauss_seidel_system import gauss_seidel_system
 from .methods.jacobi_system import jacobi_system
+from .methods.lagrange import solve_lagrange
 from .utils.parser import parse_matrix_csv, validate_augmented_matrix
 
 def solve(method_name, data):
@@ -218,6 +219,11 @@ def solve(method_name, data):
             x0=data.get("x0"),
             tol=data.get("tol"),
             max_iter=data.get("max_iter")
+        )
+    elif method_name == "lagrange":
+        return solve_lagrange(
+            file= data['file'],
+            interpolation_value= data['interpolation_value'] 
         )
 
     raise ValueError("Método no soportado")

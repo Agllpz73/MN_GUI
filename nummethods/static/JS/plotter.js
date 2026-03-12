@@ -602,3 +602,105 @@ function renderFactorization(data){
     return html;
 }
 
+// Plotter para la categoría de Interpolación
+
+
+function renderInterpolation(data) {
+
+  const container = document.getElementById("procedure-output");
+  container.innerHTML = "";
+
+  let html = "";
+
+  /* ---------------- DATOS ---------------- */
+
+  html += `<h3>Datos</h3>`;
+  html += `<table class="matrix-table">`;
+
+  html += `<tr>`;
+  data.data.headers.forEach(h => {
+      html += `<th>${h}</th>`;
+  });
+  html += `</tr>`;
+
+  data.data.rows.forEach(row => {
+      html += `<tr>`;
+      row.forEach(val => {
+          html += `<td>${Number(val).toFixed(6)}</td>`;
+      });
+      html += `</tr>`;
+  });
+
+  html += `</table>`;
+
+  /* ---------------- MODELO ---------------- */
+
+  html += `<h3>${data.model.title}</h3>`;
+  html += `<div class="math-box">${data.model.equation}</div>`;
+
+  /* ---------------- DESARROLLO ---------------- */
+
+  html += `<h3>${data.development.title}</h3>`;
+
+  if (data.development.steps) {
+
+      data.development.steps.forEach(step => {
+
+          html += `<div class="method-step">`;
+          html += `<p>${step.expression}</p>`;
+          html += `</div>`;
+
+      });
+
+  }
+
+  if (data.development.tables) {
+
+      data.development.tables.forEach(table => {
+
+          html += `<h4>${table.title}</h4>`;
+          html += `<table class="matrix-table">`;
+
+          html += `<tr>`;
+          table.headers.forEach(h => {
+              html += `<th>${h}</th>`;
+          });
+          html += `</tr>`;
+
+          table.rows.forEach(row => {
+
+              html += `<tr>`;
+              row.forEach(v => {
+                  html += `<td>${v}</td>`;
+              });
+              html += `</tr>`;
+
+          });
+
+          html += `</table>`;
+
+      });
+
+  }
+
+  /* ---------------- FUNCIÓN RESULTANTE ---------------- */
+
+  html += `<h3>${data.function.title}</h3>`;
+  html += `<div class="solution-box">${data.function.expression}</div>`;
+
+  /* ---------------- EVALUACIÓN ---------------- */
+
+  if (data.evaluation) {
+
+      html += `<h3>Evaluación</h3>`;
+      html += `<p><strong>P(${data.evaluation.x}) = ${Number(data.evaluation.result).toFixed(6)}</strong></p>`;
+
+  }
+
+  
+
+  container.innerHTML = html;
+
+  
+}
+

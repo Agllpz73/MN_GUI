@@ -112,3 +112,10 @@ def is_diagonally_dominant(matrix):
             return False
 
     return True
+
+
+def format_term(value):
+    if value < 0:
+        return f"(x+{abs(value)})"
+    else:
+        return f"(x-{value})"

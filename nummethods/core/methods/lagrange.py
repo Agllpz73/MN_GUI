@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from ..utils.parser import format_term
+
 
 def solve_lagrange(file, interpolation_value):
 
@@ -14,27 +16,15 @@ def solve_lagrange(file, interpolation_value):
     x_eval = float(interpolation_value)
     n = len(x)
 
-    # ----------------------------
-    # 1 DATA
-    # ----------------------------
-
     data_section = {
         "headers": ["x","y"],
         "rows": [[float(x[i]), float(y[i])] for i in range(n)]
     }
 
-    # ----------------------------
-    # 2 MODEL
-    # ----------------------------
-
     model_section = {
         "title": "Modelo matemático",
         "equation": "P(x) = Σ y_i L_i(x)"
     }
-
-    # ----------------------------
-    # 3 DEVELOPMENT
-    # ----------------------------
 
     steps = []
     polynomial_terms = []
@@ -51,8 +41,8 @@ def solve_lagrange(file, interpolation_value):
 
             if i != j:
 
-                numerator_terms.append(f"(x - {x[j]})")
-                denominator_terms.append(f"({x[i]} - {x[j]})")
+                numerator_terms.append(format_term(x[j]))
+                denominator_terms.append(f"({x[i]}-{x[j]})".replace("--","+"))
 
                 Li *= (x_eval - x[j]) / (x[i] - x[j])
 
@@ -61,11 +51,11 @@ def solve_lagrange(file, interpolation_value):
 
         steps.append({
             "Li": i,
-            "expression": f"L{i}(x) = {' '.join(numerator_terms)} / {' '.join(denominator_terms)}"
+            "expression": f"L{i}(x) = {' * '.join(numerator_terms)} / {' * '.join(denominator_terms)}"
         })
 
         polynomial_terms.append(
-            f"{y[i]}*({' '.join(numerator_terms)})/({' '.join(denominator_terms)})"
+            f"{y[i]}*({'*'.join(numerator_terms)})/({'*'.join(denominator_terms)})"
         )
 
     development_section = {
@@ -74,68 +64,50 @@ def solve_lagrange(file, interpolation_value):
         "steps": steps
     }
 
-    # ----------------------------
-    # 4 FUNCTION RESULT
-    # ----------------------------
-
     polynomial_expression = " + ".join(polynomial_terms)
 
-    function_section = {
-        "title": "Polinomio interpolante",
-        "expression": f"P(x) = {polynomial_expression}"
-    }
-
-    # ----------------------------
-    # 5 EVALUATION
-    # ----------------------------
+    
 
     evaluation_section = {
         "x": x_eval,
         "result": float(result)
     }
 
-    # ----------------------------
-    # 6 PLOT
-    # ----------------------------
+    # puntos para el plotter
+    # puntos para el plotter (los datos originales)
+    iterations = []
 
-    x_curve = np.linspace(min(x)-1, max(x)+1, 100)
-
-    def lagrange_eval(x_val):
-        total = 0
-        for i in range(n):
-            Li = 1
-            for j in range(n):
-                if i != j:
-                    Li *= (x_val - x[j])/(x[i]-x[j])
-            total += y[i]*Li
-        return total
-
-    y_curve = [lagrange_eval(val) for val in x_curve]
-
-    plot_section = {
-        "points": [[float(x[i]), float(y[i])] for i in range(n)],
-        "curve": {
-            "x": list(x_curve),
-            "y": list(y_curve)
-        }
+    for i in range(len(x)):
+        iterations.append({
+            "iteration": i + 1,
+            "x": float(x[i]),
+            "fx": float(y[i]),
+            "error": 0
+        })
+    function_section = {
+    "title": "Polinomio interpolante",
+    "expression": f"P(x) = {polynomial_expression}"
     }
+    
 
-    # ----------------------------
-    # RETURN UNIVERSAL
-    # ----------------------------
-
+    # agregar punto interpolado
+    iterations.append({
+        "iteration": len(iterations) + 1,
+        "x": float(x_eval),
+        "fx": float(result),
+        "error": 0
+    })
+    
+    print(polynomial_expression.replace("**", "^"))
     return {
-        "method": "Lagrange",
+        "method": "lagrange",
 
         "data": data_section,
-
         "model": model_section,
-
         "development": development_section,
-
         "function": function_section,
-
         "evaluation": evaluation_section,
-
-        "plot": plot_section
+        "dimension": 1,
+        "function_str": polynomial_expression.replace("**","^"),
+        "iterations": iterations
     }

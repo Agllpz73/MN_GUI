@@ -508,7 +508,36 @@ async function solveJacobi(event) {
     alert("Error al ejecutar Jacobi.");
   }
 }
+// Categoría de interpolación
 
+async function solveLagrange(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("/api/solve/lagrange", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.error || data.status === "error") {
+      alert(data.message || data.error);
+      return;
+    }
+
+    renderInterpolation(data);
+
+    // 🔥 aquí se activa la gráfica
+    window.drawNewtonGraph(data);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error al ejecutar Lagrange.");
+  }
+}
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
 
@@ -544,9 +573,10 @@ document.addEventListener("DOMContentLoaded", function () {
       solveFactorizacionCholesky(event);
     } else if (method === "gauss-seidel") {
       solveGaussSeidel(event);
-    }else if (method === "jacobi"){
+    } else if (method === "jacobi") {
       solveJacobi(event);
-
+    } else if (method === "lagrange") {
+      solveLagrange(event);
     }
   });
 });

@@ -140,10 +140,7 @@ def method_view(category, method):
     "cholesky",
     "gauss-seidel",
     "jacobi",
-    "trapecio",
-    "simpson-1-3",
-    "simpson-3-8",
-    "cuadratura-gauss"
+    "lagrange"
     }
 
 
@@ -235,6 +232,9 @@ def solve_api(method):
             data = {
                 "file": file
             }
+            interpolation_value = request.form.get("interpolation_value")
+            if interpolation_value:
+                data["interpolation_value"] = float(interpolation_value)
 
             # leer parámetros adicionales si existen
             x0 = request.form.getlist("x0")

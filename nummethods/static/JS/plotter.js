@@ -359,7 +359,6 @@ function renderProcedureMatrizInversa(data) {
   /*data.solution.forEach((value, i) => {
     html += `<p>${vars[i]} = <strong>${value.toFixed(6)}</strong></p>`;
   }); */
-  
 
   html += `</div>`;
   html += `</div>`;
@@ -372,241 +371,222 @@ function renderProcedureMatrizInversa(data) {
 // Render para LU y Cholesky factorización
 
 // funciones para optimizar el render
-function renderSystem(A,b){
+function renderSystem(A, b) {
+  const vars = ["x", "y", "z", "w", "v", "u"];
 
-    const vars = ["x","y","z","w","v","u"];
+  let html = `<div class="system-equations">`;
 
-    let html = `<div class="system-equations">`;
+  for (let i = 0; i < A.length; i++) {
+    let eq = "";
 
-    for(let i=0;i<A.length;i++){
+    for (let j = 0; j < A[i].length; j++) {
+      let coef = A[i][j];
 
-        let eq = "";
+      if (j > 0 && coef >= 0) eq += "+ ";
 
-        for(let j=0;j<A[i].length;j++){
-
-            let coef = A[i][j];
-
-            if(j>0 && coef>=0) eq += "+ ";
-
-            eq += `${coef}${vars[j]} `;
-        }
-
-        eq += `= ${b[i]}`;
-
-        html += `<div class="equation-line">${eq}</div>`;
+      eq += `${coef}${vars[j]} `;
     }
 
-    html += `</div>`;
+    eq += `= ${b[i]}`;
 
-    return html;
+    html += `<div class="equation-line">${eq}</div>`;
+  }
+
+  html += `</div>`;
+
+  return html;
 }
-function renderSolution(x){
+function renderSolution(x) {
+  const vars = ["x", "y", "z", "w", "v", "u"];
 
-    const vars = ["x","y","z","w","v","u"];
+  let html = `<div class="solution-vector">`;
 
-    let html = `<div class="solution-vector">`;
-
-    for(let i=0;i<x.length;i++){
-
-        html += `<div class="solution-item">
+  for (let i = 0; i < x.length; i++) {
+    html += `<div class="solution-item">
                     ${vars[i]} = ${Number(x[i]).toFixed(6)}
                  </div>`;
-    }
+  }
 
-    html += `</div>`;
+  html += `</div>`;
 
-    return html;
+  return html;
 }
 
-function renderMatrix(matrix){
+function renderMatrix(matrix) {
+  let html = `<div class="matrix-wrapper">`;
+  html += `<table class="matrix-table">`;
 
-    let html = `<div class="matrix-wrapper">`;
-    html += `<table class="matrix-table">`;
+  for (let i = 0; i < matrix.length; i++) {
+    html += `<tr>`;
 
-    for(let i = 0; i < matrix.length; i++){
+    for (let j = 0; j < matrix[i].length; j++) {
+      let value = Number(matrix[i][j]).toFixed(6);
 
-        html += `<tr>`;
-
-        for(let j = 0; j < matrix[i].length; j++){
-
-            let value = Number(matrix[i][j]).toFixed(6);
-
-            html += `<td>${value}</td>`;
-        }
-
-        html += `</tr>`;
+      html += `<td>${value}</td>`;
     }
 
-    html += `</table>`;
-    html += `</div>`;
+    html += `</tr>`;
+  }
 
-    return html;
+  html += `</table>`;
+  html += `</div>`;
+
+  return html;
 }
 
-function renderVector(vector){
+function renderVector(vector) {
+  let html = `<div class="matrix-wrapper">`;
+  html += `<table class="matrix-table">`;
 
-    let html = `<div class="matrix-wrapper">`;
-    html += `<table class="matrix-table">`;
+  for (let i = 0; i < vector.length; i++) {
+    let value = Number(vector[i]).toFixed(6);
 
-    for(let i = 0; i < vector.length; i++){
+    html += `<tr><td>${value}</td></tr>`;
+  }
 
-        let value = Number(vector[i]).toFixed(6);
+  html += `</table>`;
+  html += `</div>`;
 
-        html += `<tr><td>${value}</td></tr>`;
-    }
-
-    html += `</table>`;
-    html += `</div>`;
-
-    return html;
+  return html;
 }
 
-function renderFactorization(data){
+function renderFactorization(data) {
+  const {
+    method,
+    A,
+    factor1,
+    factor2,
+    factor1_name,
+    factor2_name,
+    b,
+    y,
+    x,
+    forward_equation,
+    backward_equation,
+  } = data;
 
-    const {
-        method,
-        A,
-        factor1,
-        factor2,
-        factor1_name,
-        factor2_name,
-        b,
-        y,
-        x,
-        forward_equation,
-        backward_equation
-    } = data;
+  let html = "";
 
-    let html = "";
+  html += `<div class="solution-box">`;
+  html += `<h3>Método de ${method}</h3>`;
 
-    html += `<div class="solution-box">`;
-    html += `<h3>Método de ${method}</h3>`;
+  /* PASO 1 */
+  html += `<div class="step-box">`;
+  html += `<h4>Paso 1: Sistema original</h4>`;
+  html += renderSystem(A, b);
+  html += `</div>`;
 
+  /* PASO 2 */
+  html += `<div class="step-box">`;
+  html += `<h4>Paso 2: Separación de matrices</h4>`;
 
-    /* PASO 1 */
-    html += `<div class="step-box">`;
-    html += `<h4>Paso 1: Sistema original</h4>`;
-    html += renderSystem(A,b);
-    html += `</div>`;
+  html += `<div class="matrix-group">`;
 
+  html += `<div>`;
+  html += `<p>Matriz A</p>`;
+  html += renderMatrix(A);
+  html += `</div>`;
 
-    /* PASO 2 */
-    html += `<div class="step-box">`;
-    html += `<h4>Paso 2: Separación de matrices</h4>`;
+  html += `<div>`;
+  html += `<p>Vector b</p>`;
+  html += renderVector(b);
+  html += `</div>`;
 
-    html += `<div class="matrix-group">`;
+  html += `</div>`;
+  html += `</div>`;
 
-    html += `<div>`;
-    html += `<p>Matriz A</p>`;
-    html += renderMatrix(A);
-    html += `</div>`;
+  /* PASO 3 */
+  html += `<div class="step-box">`;
+  html += `<h4>Paso 3: Factorización</h4>`;
 
-    html += `<div>`;
-    html += `<p>Vector b</p>`;
-    html += renderVector(b);
-    html += `</div>`;
+  html += `<div class="matrix-product">`;
 
-    html += `</div>`;
-    html += `</div>`;
+  html += `<div>`;
+  html += `<p>A</p>`;
+  html += renderMatrix(A);
+  html += `</div>`;
 
+  html += `<span class="matrix-equals">=</span>`;
 
-    /* PASO 3 */
-    html += `<div class="step-box">`;
-    html += `<h4>Paso 3: Factorización</h4>`;
+  html += `<div>`;
+  html += `<p>${factor1_name}</p>`;
+  html += renderMatrix(factor1);
+  html += `</div>`;
 
-    html += `<div class="matrix-product">`;
+  html += `<span class="matrix-mult">×</span>`;
 
-    html += `<div>`;
-    html += `<p>A</p>`;
-    html += renderMatrix(A);
-    html += `</div>`;
+  html += `<div>`;
+  html += `<p>${factor2_name}</p>`;
+  html += renderMatrix(factor2);
+  html += `</div>`;
 
-    html += `<span class="matrix-equals">=</span>`;
+  html += `</div>`;
+  html += `</div>`;
 
-    html += `<div>`;
-    html += `<p>${factor1_name}</p>`;
-    html += renderMatrix(factor1);
-    html += `</div>`;
+  /* PASO 4 */
+  html += `<div class="step-box">`;
+  html += `<h4>Paso 4: Sustitución hacia adelante</h4>`;
+  html += `<p class="equation">${forward_equation}</p>`;
 
-    html += `<span class="matrix-mult">×</span>`;
+  html += `<div class="matrix-group">`;
 
-    html += `<div>`;
-    html += `<p>${factor2_name}</p>`;
-    html += renderMatrix(factor2);
-    html += `</div>`;
+  html += `<div>`;
+  html += `<p>${factor1_name}</p>`;
+  html += renderMatrix(factor1);
+  html += `</div>`;
 
-    html += `</div>`;
-    html += `</div>`;
+  html += `<div>`;
+  html += `<p>b</p>`;
+  html += renderVector(b);
+  html += `</div>`;
 
+  html += `<div>`;
+  html += `<p>y</p>`;
+  html += renderVector(y);
+  html += `</div>`;
 
-    /* PASO 4 */
-    html += `<div class="step-box">`;
-    html += `<h4>Paso 4: Sustitución hacia adelante</h4>`;
-    html += `<p class="equation">${forward_equation}</p>`;
+  html += `</div>`;
+  html += `</div>`;
 
-    html += `<div class="matrix-group">`;
+  /* PASO 5 */
+  html += `<div class="step-box">`;
+  html += `<h4>Paso 5: Sustitución hacia atrás</h4>`;
+  html += `<p class="equation">${backward_equation}</p>`;
 
-    html += `<div>`;
-    html += `<p>${factor1_name}</p>`;
-    html += renderMatrix(factor1);
-    html += `</div>`;
+  html += `<div class="matrix-group">`;
 
-    html += `<div>`;
-    html += `<p>b</p>`;
-    html += renderVector(b);
-    html += `</div>`;
+  html += `<div>`;
+  html += `<p>${factor2_name}</p>`;
+  html += renderMatrix(factor2);
+  html += `</div>`;
 
-    html += `<div>`;
-    html += `<p>y</p>`;
-    html += renderVector(y);
-    html += `</div>`;
+  html += `<div>`;
+  html += `<p>y</p>`;
+  html += renderVector(y);
+  html += `</div>`;
 
-    html += `</div>`;
-    html += `</div>`;
+  html += `<div>`;
+  html += `<p>x</p>`;
+  html += renderVector(x);
+  html += `</div>`;
 
+  html += `</div>`;
+  html += `</div>`;
 
-    /* PASO 5 */
-    html += `<div class="step-box">`;
-    html += `<h4>Paso 5: Sustitución hacia atrás</h4>`;
-    html += `<p class="equation">${backward_equation}</p>`;
+  /* RESULTADO */
+  html += `<div class="step-box result-box">`;
+  html += `<h4>Solución del sistema</h4>`;
+  html += renderSolution(x);
+  html += `</div>`;
 
-    html += `<div class="matrix-group">`;
+  html += `</div>`;
 
-    html += `<div>`;
-    html += `<p>${factor2_name}</p>`;
-    html += renderMatrix(factor2);
-    html += `</div>`;
-
-    html += `<div>`;
-    html += `<p>y</p>`;
-    html += renderVector(y);
-    html += `</div>`;
-
-    html += `<div>`;
-    html += `<p>x</p>`;
-    html += renderVector(x);
-    html += `</div>`;
-
-    html += `</div>`;
-    html += `</div>`;
-
-
-    /* RESULTADO */
-    html += `<div class="step-box result-box">`;
-    html += `<h4>Solución del sistema</h4>`;
-    html += renderSolution(x);
-    html += `</div>`;
-
-    html += `</div>`;
-
-    return html;
+  return html;
 }
 
 // Plotter para la categoría de Interpolación
 
-
 function renderInterpolation(data) {
-
   const container = document.getElementById("procedure-output");
   container.innerHTML = "";
 
@@ -618,17 +598,17 @@ function renderInterpolation(data) {
   html += `<table class="matrix-table">`;
 
   html += `<tr>`;
-  data.data.headers.forEach(h => {
-      html += `<th>${h}</th>`;
+  data.data.headers.forEach((h) => {
+    html += `<th>${h}</th>`;
   });
   html += `</tr>`;
 
-  data.data.rows.forEach(row => {
-      html += `<tr>`;
-      row.forEach(val => {
-          html += `<td>${Number(val).toFixed(6)}</td>`;
-      });
-      html += `</tr>`;
+  data.data.rows.forEach((row) => {
+    html += `<tr>`;
+    row.forEach((val) => {
+      html += `<td>${Number(val).toFixed(6)}</td>`;
+    });
+    html += `</tr>`;
   });
 
   html += `</table>`;
@@ -643,44 +623,34 @@ function renderInterpolation(data) {
   html += `<h3>${data.development.title}</h3>`;
 
   if (data.development.steps) {
-
-      data.development.steps.forEach(step => {
-
-          html += `<div class="method-step">`;
-          html += `<p>${step.expression}</p>`;
-          html += `</div>`;
-
-      });
-
+    data.development.steps.forEach((step) => {
+      html += `<div class="method-step">`;
+      html += `<p>${step.expression}</p>`;
+      html += `</div>`;
+    });
   }
 
   if (data.development.tables) {
+    data.development.tables.forEach((table) => {
+      html += `<h4>${table.title}</h4>`;
+      html += `<table class="matrix-table">`;
 
-      data.development.tables.forEach(table => {
+      html += `<tr>`;
+      table.headers.forEach((h) => {
+        html += `<th>${h}</th>`;
+      });
+      html += `</tr>`;
 
-          html += `<h4>${table.title}</h4>`;
-          html += `<table class="matrix-table">`;
-
-          html += `<tr>`;
-          table.headers.forEach(h => {
-              html += `<th>${h}</th>`;
-          });
-          html += `</tr>`;
-
-          table.rows.forEach(row => {
-
-              html += `<tr>`;
-              row.forEach(v => {
-                  html += `<td>${v}</td>`;
-              });
-              html += `</tr>`;
-
-          });
-
-          html += `</table>`;
-
+      table.rows.forEach((row) => {
+        html += `<tr>`;
+        row.forEach((v) => {
+          html += `<td>${v}</td>`;
+        });
+        html += `</tr>`;
       });
 
+      html += `</table>`;
+    });
   }
 
   /* ---------------- FUNCIÓN RESULTANTE ---------------- */
@@ -691,16 +661,212 @@ function renderInterpolation(data) {
   /* ---------------- EVALUACIÓN ---------------- */
 
   if (data.evaluation) {
-
-      html += `<h3>Evaluación</h3>`;
-      html += `<p><strong>P(${data.evaluation.x}) = ${Number(data.evaluation.result).toFixed(6)}</strong></p>`;
-
+    html += `<h3>Evaluación</h3>`;
+    html += `<p><strong>P(${data.evaluation.x}) = ${Number(data.evaluation.result).toFixed(6)}</strong></p>`;
   }
 
-  
-
   container.innerHTML = html;
-
-  
 }
 
+// Diseño de plotter para Integración, Será parecido al que tenemos de interpolación
+
+function renderIntegration(data) {
+  const container = document.getElementById("procedure-output");
+  container.innerHTML = "";
+
+  if (!data.success) {
+    container.innerHTML = `<p style="color:red;">${data.message || "Ocurrió un error al calcular el método."}</p>`;
+    return;
+  }
+
+  let html = "";
+
+  /* ---------------- TÍTULO DEL MÉTODO ---------------- */
+  html += `<h3>Método de ${formatIntegrationMethod(data.method)}</h3>`;
+
+  /* ---------------- PARÁMETROS DE ENTRADA ---------------- */
+  html += `<div class="solution-box">`;
+  html += `<h3>Parámetros de entrada</h3>`;
+  html += `<p><strong>Función:</strong> ${data.input.function}</p>`;
+  html += `<p><strong>Límite inferior a:</strong> ${formatNumber(data.input.a)}</p>`;
+  html += `<p><strong>Límite superior b:</strong> ${formatNumber(data.input.b)}</p>`;
+
+  if (data.input.n !== undefined && data.input.n !== null) {
+    html += `<p><strong>Número de subintervalos n:</strong> ${data.input.n}</p>`;
+  }
+
+  if (
+    data.input.extra &&
+    data.input.extra.gauss_points !== undefined &&
+    data.input.extra.gauss_points !== null
+  ) {
+    html += `<p><strong>Puntos de Gauss:</strong> ${data.input.extra.gauss_points}</p>`;
+  }
+
+  html += `</div>`;
+
+  /* ---------------- RESULTADO ---------------- */
+  html += `<div class="solution-box">`;
+  html += `<h3>Resultado</h3>`;
+  html += `<p><strong>Integral aproximada:</strong> ${formatNumber(data.result.integral)}</p>`;
+
+  if (
+    data.result.exact_value !== null &&
+    data.result.exact_value !== undefined
+  ) {
+    html += `<p><strong>Valor exacto:</strong> ${formatNumber(data.result.exact_value)}</p>`;
+  }
+
+  if (
+    data.result.absolute_error !== null &&
+    data.result.absolute_error !== undefined
+  ) {
+    html += `<p><strong>Error absoluto:</strong> ${formatScientific(data.result.absolute_error)}</p>`;
+  }
+
+  if (
+    data.result.relative_error !== null &&
+    data.result.relative_error !== undefined
+  ) {
+    html += `<p><strong>Error relativo:</strong> ${formatScientific(data.result.relative_error)}</p>`;
+  }
+
+  html += `<p><strong>Mensaje:</strong> ${data.message}</p>`;
+  html += `</div>`;
+
+  /* ---------------- FÓRMULA ---------------- */
+  if (data.procedure && data.procedure.formula) {
+    html += `<h3>Fórmula aplicada</h3>`;
+    html += `<div class="math-box">${data.procedure.formula}</div>`;
+  }
+
+  /* ---------------- PROCEDIMIENTO ---------------- */
+  if (
+    data.procedure &&
+    data.procedure.steps &&
+    data.procedure.steps.length > 0
+  ) {
+    html += `<h3>Procedimiento</h3>`;
+
+    data.procedure.steps.forEach((step, index) => {
+      html += `<div class="method-step">`;
+      html += `<p><strong>Paso ${index + 1}:</strong> ${step}</p>`;
+      html += `</div>`;
+    });
+  }
+
+  /* ---------------- TABLA DE EVALUACIÓN ---------------- */
+  if (
+    data.procedure &&
+    data.procedure.headers &&
+    data.procedure.rows &&
+    data.procedure.rows.length > 0
+  ) {
+    html += `<h3>${data.procedure.table_title || "Tabla de evaluación"}</h3>`;
+    html += `<table class="matrix-table">`;
+
+    html += `<tr>`;
+    data.procedure.headers.forEach((header) => {
+      html += `<th>${header}</th>`;
+    });
+    html += `</tr>`;
+
+    data.procedure.rows.forEach((row) => {
+      html += `<tr>`;
+      row.forEach((value, colIndex) => {
+        if (typeof value === "number") {
+          if (colIndex === 0 && Number.isInteger(value)) {
+            html += `<td>${value}</td>`;
+          } else {
+            html += `<td>${formatNumber(value)}</td>`;
+          }
+        } else {
+          html += `<td>${value}</td>`;
+        }
+      });
+      html += `</tr>`;
+    });
+
+    html += `</table>`;
+  }
+
+  /* ---------------- RESUMEN ---------------- */
+  if (data.procedure && data.procedure.summary) {
+    html += `<div class="solution-box">`;
+    html += `<h3>Resumen del cálculo</h3>`;
+
+    Object.entries(data.procedure.summary).forEach(([key, value]) => {
+      html += `<p><strong>${formatSummaryKey(key)}:</strong> ${
+        typeof value === "number" ? formatNumber(value) : value
+      }</p>`;
+    });
+
+    html += `</div>`;
+  }
+
+  /* ---------------- INTERPRETACIÓN ---------------- */
+  html += `<div class="solution-box">`;
+  html += `<h3>Interpretación</h3>`;
+  html += `<p>${getIntegrationInterpretation(data.method)}</p>`;
+  html += `</div>`;
+
+  container.innerHTML = html;
+}
+
+// funciones aux para integración
+
+function formatNumber(value) {
+  const num = Number(value);
+
+  if (!isFinite(num)) return value;
+
+  if (Math.abs(num) >= 100000 || (Math.abs(num) > 0 && Math.abs(num) < 0.0001)) {
+    return num.toExponential(6);
+  }
+
+  return num.toFixed(6);
+}
+
+function formatScientific(value) {
+  const num = Number(value);
+  if (!isFinite(num)) return value;
+  return num.toExponential(6);
+}
+
+function formatIntegrationMethod(method) {
+  const methods = {
+    trapecio: "Trapecio",
+    simpson_13: "Simpson 1/3",
+    simpson_38: "Simpson 3/8",
+    cuadratura_gauss: "Cuadratura de Gauss"
+  };
+
+  return methods[method] || method;
+}
+
+function formatSummaryKey(key) {
+  const labels = {
+    h: "Tamaño de paso h",
+    weighted_sum: "Suma ponderada",
+    evaluations: "Evaluaciones de la función",
+    transformation: "Transformación",
+    interval_length: "Longitud del intervalo"
+  };
+
+  return labels[key] || key;
+}
+
+function getIntegrationInterpretation(method) {
+  const interpretations = {
+    trapecio:
+      "La integral se aproxima como la suma de áreas trapezoidales construidas entre nodos consecutivos del intervalo.",
+    simpson_13:
+      "La integral se aproxima mediante parábolas ajustadas en bloques de tres nodos, lo que suele mejorar la precisión respecto al trapecio.",
+    simpson_38:
+      "La aproximación se realiza por bloques de cuatro nodos, asignando pesos específicos para mejorar el ajuste del área bajo la curva.",
+    cuadratura_gauss:
+      "La integral se aproxima evaluando la función en puntos estratégicos del intervalo con pesos óptimos, sin necesidad de una partición uniforme."
+  };
+
+  return interpretations[method] || "Se obtuvo una aproximación numérica del área bajo la curva.";
+}

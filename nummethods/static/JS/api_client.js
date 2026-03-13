@@ -534,7 +534,6 @@ async function solveLagrange(event) {
 
     renderInterpolation(data);
 
-    
     window.drawNewtonGraph(data);
   } catch (error) {
     console.error("Error:", error);
@@ -564,7 +563,6 @@ async function solveNewtonDD(event) {
 
     renderInterpolation(data);
 
-    
     window.drawNewtonGraph(data);
   } catch (error) {
     console.error("Error:", error);
@@ -595,7 +593,6 @@ async function solveNewtonDF(event) {
 
     renderInterpolation(data);
 
-    
     window.drawNewtonGraph(data);
   } catch (error) {
     console.error("Error:", error);
@@ -626,7 +623,6 @@ async function solveMinimosCuadrados(event) {
 
     renderInterpolation(data);
 
-    
     window.drawNewtonGraph(data);
   } catch (error) {
     console.error("Error:", error);
@@ -657,15 +653,64 @@ async function solveMinimosCuadradosTransformaciones(event) {
 
     renderInterpolation(data);
 
-    
     window.drawNewtonGraph(data);
   } catch (error) {
     console.error("Error:", error);
     alert("Error al ejecutar Minimos Cuadrados con Transformaciones");
   }
-
 }
 
+/*-----------------Categoría Integración -------------------*/
+
+async function solveTrapecio(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+  const payload = {
+    function: formData.get("fx"),
+    a: parseFloat(formData.get("a")),
+    b: parseFloat(formData.get("b")),
+    n: parseFloat(formData.get("n")),
+  };
+
+  try {
+    const response = await fetch("/api/solve/trapecio", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      // body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error del servidor:", errorText);
+      alert("Error del servidor.");
+      return;
+    }
+
+    const data = await response.json();
+    console.log("Datos Trapecio:", data);
+
+    if (data.error || data.status === "error" || data.success === false) {
+      alert(
+        data.message || data.error || "Ocurrió un error al ejecutar Trapecio.",
+      );
+      return;
+    }
+
+    renderIntegration(data);
+
+    if (window.drawNewtonGraph) {
+      window.drawNewtonGraph(data);
+    } else {
+      console.error("La función drawIntegrationGraph no está definida.");
+    }
+  } catch (error) {
+    console.error("Error en solveTrapecio:", error);
+    alert("Error al ejecutar el método de Trapecio.");
+  }
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
@@ -706,14 +751,16 @@ document.addEventListener("DOMContentLoaded", function () {
       solveJacobi(event);
     } else if (method === "lagrange") {
       solveLagrange(event);
-    }else if (method === "newton-dd"){
+    } else if (method === "newton-dd") {
       solveNewtonDD(event);
-    }else if (method === "newton-df"){
+    } else if (method === "newton-df") {
       solveNewtonDF(event);
-    }else if (method === "minimos-cuadrados"){
+    } else if (method === "minimos-cuadrados") {
       solveMinimosCuadrados(event);
-    }else if (method === "mc-transf"){
+    } else if (method === "mc-transf") {
       solveMinimosCuadradosTransformaciones(event);
+    } else if (method === "trapecio") {
+      solveTrapecio(event);
     }
   });
 });

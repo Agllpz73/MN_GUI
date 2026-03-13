@@ -603,6 +603,37 @@ async function solveNewtonDF(event) {
   }
 }
 
+// Minimos Cuadrados
+
+async function solveMinimosCuadrados(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("/api/solve/minimos-cuadrados", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.error || data.status === "error") {
+      alert(data.message || data.error);
+      return;
+    }
+
+    renderInterpolation(data);
+
+    
+    window.drawNewtonGraph(data);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error al ejecutar Newton Diferencias Divididas");
+  }
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
@@ -647,6 +678,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveNewtonDD(event);
     }else if (method === "newton-df"){
       solveNewtonDF(event);
+    }else if (method === "minimos-cuadrados"){
+      solveMinimosCuadrados(event);
     }
   });
 });

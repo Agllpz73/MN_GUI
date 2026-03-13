@@ -58,13 +58,12 @@ def solve_simpson_13(function_str, a, b, n):
                 "message": "Los límites a y b no pueden ser iguales."
             }
         
+        sign = 1
         if b < a:
-            return {
-                "success": False,
-                "category" : "integracion",
-                "method" : "simpson_13",
-                "message" : "El límite inferior debe ser menor que el superior. (a < b)"
-            }
+            
+            a, b = b, a
+            sign = -1
+            
         
         h = (b - a) / n
 

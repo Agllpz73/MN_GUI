@@ -759,6 +759,57 @@ async function solveSimpson13(event) {
     }
   } catch (error) {
     console.error("Error en solveTrapecio:", error);
+    alert("Error al ejecutar el método de Simpson 1/3.");
+  }
+}
+
+// Simpson 3/8
+async function solveSimpson38(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+  const payload = {
+    function: formData.get("fx"),
+    a: parseFloat(formData.get("a")),
+    b: parseFloat(formData.get("b")),
+    n: parseFloat(formData.get("n")),
+  };
+
+  try {
+    const response = await fetch("/api/solve/simpson-3-8", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      // body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error del servidor:", errorText);
+      alert("Error del servidor.");
+      return;
+    }
+
+    const data = await response.json();
+    console.log("Datos Trapecio:", data);
+
+    if (data.error || data.status === "error" || data.success === false) {
+      alert(
+        data.message || data.error || "Ocurrió un error al ejecutar Simpson 3/8.",
+      );
+      return;
+    }
+
+    renderIntegration(data);
+
+    if (window.drawNewtonGraph) {
+      window.drawNewtonGraph(data);
+    } else {
+      console.error("La función drawIntegrationGraph no está definida.");
+    }
+  } catch (error) {
+    console.error("Error en solveTrapecio:", error);
     alert("Error al ejecutar el método de Trapecio.");
   }
 }
@@ -814,6 +865,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveTrapecio(event);
     }else if (method === "simpson-1-3") {
       solveSimpson13(event);
+    }else if (method === "simpson-3-8"){
+      solveSimpson38(event);
     }
   });
 });

@@ -18,6 +18,7 @@ from .methods.minimos_cuadrados import solve_minimos_cuadrados
 from .methods.mc_tranformaciones import solve_minimos_cuadrados_transformacion
 from .methods.trapecio import solve_trapecio
 from .methods.simpson_13 import solve_simpson_13
+from .methods.simpson_38 import solve_simpson_38
 from .utils.parser import parse_matrix_csv, validate_augmented_matrix
 
 def solve(method_name, data):
@@ -265,5 +266,14 @@ def solve(method_name, data):
             b=data["b"],
             n=data["n"]
         )
+    elif method_name == "simpson-3-8":
+        return solve_simpson_38(
+            function_str=data["function"],
+            a=data["a"],
+            b=data["b"],
+            n=data["n"]
+        )
+    
+    
 
     raise ValueError("Método no soportado")

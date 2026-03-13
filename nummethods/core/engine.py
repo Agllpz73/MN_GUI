@@ -15,6 +15,7 @@ from .methods.lagrange import solve_lagrange
 from .methods.newton_DD import solve_newton_diferencias_divididas
 from .methods.newton_DF import solve_newton_diferencias_finitas
 from .methods.minimos_cuadrados import solve_minimos_cuadrados
+from .methods.mc_tranformaciones import solve_minimos_cuadrados_transformacion
 from .utils.parser import parse_matrix_csv, validate_augmented_matrix
 
 def solve(method_name, data):
@@ -240,6 +241,11 @@ def solve(method_name, data):
         )
     elif method_name == "minimos-cuadrados":
         return solve_minimos_cuadrados(
+            file=data['file'],
+            interpolation_value=data['interpolation_value']
+        )
+    elif method_name == "mc-transf":
+        return solve_minimos_cuadrados_transformacion(
             file=data['file'],
             interpolation_value=data['interpolation_value']
         )

@@ -599,7 +599,7 @@ async function solveNewtonDF(event) {
     window.drawNewtonGraph(data);
   } catch (error) {
     console.error("Error:", error);
-    alert("Error al ejecutar Newton Diferencias Divididas");
+    alert("Error al ejecutar Newton Diferencias Finitas");
   }
 }
 
@@ -630,8 +630,40 @@ async function solveMinimosCuadrados(event) {
     window.drawNewtonGraph(data);
   } catch (error) {
     console.error("Error:", error);
-    alert("Error al ejecutar Newton Diferencias Divididas");
+    alert("Error al ejecutar Minimos Cuadrados");
   }
+}
+
+//Minimos cuadrados con transformaciones
+
+async function solveMinimosCuadradosTransformaciones(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("/api/solve/mc-transf", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.error || data.status === "error") {
+      alert(data.message || data.error);
+      return;
+    }
+
+    renderInterpolation(data);
+
+    
+    window.drawNewtonGraph(data);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error al ejecutar Minimos Cuadrados con Transformaciones");
+  }
+
 }
 
 
@@ -680,6 +712,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveNewtonDF(event);
     }else if (method === "minimos-cuadrados"){
       solveMinimosCuadrados(event);
+    }else if (method === "mc-transf"){
+      solveMinimosCuadradosTransformaciones(event);
     }
   });
 });

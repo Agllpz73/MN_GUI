@@ -534,7 +534,7 @@ async function solveLagrange(event) {
 
     renderInterpolation(data);
 
-    // 🔥 aquí se activa la gráfica
+    
     window.drawNewtonGraph(data);
   } catch (error) {
     console.error("Error:", error);
@@ -564,13 +564,45 @@ async function solveNewtonDD(event) {
 
     renderInterpolation(data);
 
-    // 🔥 aquí se activa la gráfica
+    
     window.drawNewtonGraph(data);
   } catch (error) {
     console.error("Error:", error);
     alert("Error al ejecutar Newton Diferencias Divididas");
   }
 }
+
+// Newton Diferencias Finitas
+
+async function solveNewtonDF(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("/api/solve/newton-df", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.error || data.status === "error") {
+      alert(data.message || data.error);
+      return;
+    }
+
+    renderInterpolation(data);
+
+    
+    window.drawNewtonGraph(data);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error al ejecutar Newton Diferencias Divididas");
+  }
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
@@ -613,6 +645,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveLagrange(event);
     }else if (method === "newton-dd"){
       solveNewtonDD(event);
+    }else if (method === "newton-df"){
+      solveNewtonDF(event);
     }
   });
 });

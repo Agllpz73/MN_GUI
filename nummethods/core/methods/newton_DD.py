@@ -149,7 +149,7 @@ def solve_newton_diferencias_divididas(file, interpolation_value):
         "type": "interpolated"
     })
 
-    print(polynomial_expression.replace("**", "^"))
+    
 
     return {
         "method": "newton_diferencias_divididas",

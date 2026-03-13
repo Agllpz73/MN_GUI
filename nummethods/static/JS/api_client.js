@@ -662,6 +662,7 @@ async function solveMinimosCuadradosTransformaciones(event) {
 
 /*-----------------Categoría Integración -------------------*/
 
+// Trapecio
 async function solveTrapecio(event) {
   event.preventDefault();
 
@@ -676,6 +677,56 @@ async function solveTrapecio(event) {
 
   try {
     const response = await fetch("/api/solve/trapecio", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      // body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error del servidor:", errorText);
+      alert("Error del servidor.");
+      return;
+    }
+
+    const data = await response.json();
+    console.log("Datos Trapecio:", data);
+
+    if (data.error || data.status === "error" || data.success === false) {
+      alert(
+        data.message || data.error || "Ocurrió un error al ejecutar Trapecio.",
+      );
+      return;
+    }
+
+    renderIntegration(data);
+
+    if (window.drawNewtonGraph) {
+      window.drawNewtonGraph(data);
+    } else {
+      console.error("La función drawIntegrationGraph no está definida.");
+    }
+  } catch (error) {
+    console.error("Error en solveTrapecio:", error);
+    alert("Error al ejecutar el método de Trapecio.");
+  }
+}
+// Simpson 1/3
+async function solveSimpson13(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+  const payload = {
+    function: formData.get("fx"),
+    a: parseFloat(formData.get("a")),
+    b: parseFloat(formData.get("b")),
+    n: parseFloat(formData.get("n")),
+  };
+
+  try {
+    const response = await fetch("/api/solve/simpson-1-3", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -761,6 +812,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveMinimosCuadradosTransformaciones(event);
     } else if (method === "trapecio") {
       solveTrapecio(event);
+    }else if (method === "simpson-1-3") {
+      solveSimpson13(event);
     }
   });
 });

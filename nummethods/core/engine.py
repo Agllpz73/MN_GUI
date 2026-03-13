@@ -17,6 +17,7 @@ from .methods.newton_DF import solve_newton_diferencias_finitas
 from .methods.minimos_cuadrados import solve_minimos_cuadrados
 from .methods.mc_tranformaciones import solve_minimos_cuadrados_transformacion
 from .methods.trapecio import solve_trapecio
+from .methods.simpson_13 import solve_simpson_13
 from .utils.parser import parse_matrix_csv, validate_augmented_matrix
 
 def solve(method_name, data):
@@ -252,6 +253,13 @@ def solve(method_name, data):
         )
     elif method_name == "trapecio":
         return solve_trapecio(
+            function_str=data["function"],
+            a=data["a"],
+            b=data["b"],
+            n=data["n"]
+        )
+    elif method_name == "simpson-1-3":
+        return solve_simpson_13(
             function_str=data["function"],
             a=data["a"],
             b=data["b"],

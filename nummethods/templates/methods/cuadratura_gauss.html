@@ -8,11 +8,11 @@
   <label>Límite superior b:</label>
   <input type="number" step="any" name="b" required />
 
-  <label>Tolerancia (ε):</label>
-  <input type="number" step="any" name="tol" required />
-
   <label>Puntos de integración:</label>
-  <input type="number" name="max_iter" required />
+  <input type="number" name="n" required />
+
+  <input type="hidden" name="method" value="cuadratura-gauss" />
+
 
   <button type="submit">Calcular</button>
 </form>

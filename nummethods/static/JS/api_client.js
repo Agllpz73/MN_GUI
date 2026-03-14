@@ -745,7 +745,7 @@ async function solveSimpson13(event) {
 
     if (data.error || data.status === "error" || data.success === false) {
       alert(
-        data.message || data.error || "Ocurrió un error al ejecutar Trapecio.",
+        data.message || data.error || "Ocurrió un error al ejecutar Simpson 1/3.",
       );
       return;
     }
@@ -809,10 +809,61 @@ async function solveSimpson38(event) {
       console.error("La función drawIntegrationGraph no está definida.");
     }
   } catch (error) {
-    console.error("Error en solveTrapecio:", error);
-    alert("Error al ejecutar el método de Trapecio.");
+    console.error("Error en solveSimpson38:", error);
+    alert("Error al ejecutar el método de Simpson 3/8.");
   }
 }
+// Cuadratura de Gauss 
+async function solveCuadraturaGauss(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+  const payload = {
+    function: formData.get("fx"),
+    a: parseFloat(formData.get("a")),
+    b: parseFloat(formData.get("b")),
+    n: parseFloat(formData.get("n")),
+  };
+
+  try {
+    const response = await fetch("/api/solve/cuadratura-gauss", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      // body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error del servidor:", errorText);
+      alert("Error del servidor.");
+      return;
+    }
+
+    const data = await response.json();
+    console.log("Datos Cuadratura de Gauss:", data);
+
+    if (data.error || data.status === "error" || data.success === false) {
+      alert(
+        data.message || data.error || "Ocurrió un error al ejecutar Cuadratura de Gauss.",
+      );
+      return;
+    }
+
+    renderIntegration(data);
+
+    if (window.drawNewtonGraph) {
+      window.drawNewtonGraph(data);
+    } else {
+      console.error("La función drawIntegrationGraph no está definida.");
+    }
+  } catch (error) {
+    console.error("Error en solveTrapecio:", error);
+    alert("Error al ejecutar el método de Cuadratura de Gauss.");
+  }
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
@@ -867,6 +918,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveSimpson13(event);
     }else if (method === "simpson-3-8"){
       solveSimpson38(event);
-    }
+    }else if (method === "cuadratura-gauss"){
+      solveCuadraturaGauss(event);
+    } 
   });
 });

@@ -810,3 +810,173 @@ function getIntegrationInterpretation(method) {
 
   return interpretations[method] || "Se obtuvo una aproximación numérica del área bajo la curva.";
 }
+
+// Render para mostrar pasos para métodos de EDO
+
+/* =========================================================
+   UTILIDADES GENERALES PARA TABLA DINÁMICA
+========================================================= */
+
+function formatDynamicValue(value) {
+  if (value === null || value === undefined) return "";
+
+  if (typeof value === "number") {
+    if (!isFinite(value)) return String(value);
+
+    if (value === 0) return "0.000000";
+
+    if (Math.abs(value) < 1e-6 || Math.abs(value) >= 1e6) {
+      return value.toExponential(6);
+    }
+
+    return value.toFixed(6);
+  }
+
+  if (Array.isArray(value)) {
+    return `[ ${value
+      .map((v) =>
+        typeof v === "number"
+          ? (isFinite(v) ? v.toFixed(6) : String(v))
+          : String(v)
+      )
+      .join(", ")} ]`;
+  }
+
+  if (typeof value === "boolean") {
+    return value ? "Sí" : "No";
+  }
+
+  return String(value);
+}
+
+function formatColumnName(column) {
+  const labels = {
+    iteration: "Iteración",
+    iter: "Iteración",
+    x: "x",
+    y: "y",
+    fx: "f(x)",
+    error: "Error",
+    predictor: "Predictor",
+    corrector: "Corrector",
+    k1: "k1",
+    k2: "k2",
+    k3: "k3",
+    k4: "k4"
+  };
+
+  return labels[column] || column;
+}
+
+function renderDynamicTable(dataArray, title = "Tabla de resultados") {
+  if (!dataArray || dataArray.length === 0) {
+    return `
+      <div class="solution-box">
+        <h3>${title}</h3>
+        <p>No hay datos para mostrar.</p>
+      </div>
+    `;
+  }
+
+  const columns = Object.keys(dataArray[0]);
+
+  let html = `
+    <div class="solution-box">
+      <h3>${title}</h3>
+      <table class="matrix-table">
+        <thead>
+          <tr>
+  `;
+
+  columns.forEach((col) => {
+    html += `<th>${formatColumnName(col)}</th>`;
+  });
+
+  html += `
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  dataArray.forEach((row) => {
+    html += `<tr>`;
+    columns.forEach((col) => {
+      html += `<td>${formatDynamicValue(row[col])}</td>`;
+    });
+    html += `</tr>`;
+  });
+
+  html += `
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  return html;
+}
+
+/* =========================================================
+   RENDER GENERAL PARA EDO
+========================================================= */
+
+function renderEDO(data) {
+  const container = document.getElementById("procedure-output");
+  container.innerHTML = "";
+
+  if (!data || data.success === false) {
+    container.innerHTML = `<p style="color:red;">${data?.message || "No se pudo resolver el método."}</p>`;
+    return;
+  }
+
+  let html = "";
+
+  html += renderEDOSummary(data);
+  html += renderDynamicTable(data.iterations, "Tabla de iteraciones");
+  html += renderEDOFinalResult(data);
+
+  if (data.message) {
+    html += `
+      <div class="solution-box">
+        <h3>Mensaje</h3>
+        <p>${data.message}</p>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+}
+
+/* =========================================================
+   BLOQUES AUXILIARES DE EDO
+========================================================= */
+
+function renderEDOSummary(data) {
+  const input = data.input || {};
+  const summary = data.summary || {};
+
+  return `
+    <div class="solution-box">
+      <h3>Resumen del método</h3>
+      <p><strong>Método:</strong> ${data.method || "N/A"}</p>
+      <p><strong>Ecuación diferencial:</strong> y' = ${input.function ?? "N/A"}</p>
+      <p><strong>x₀:</strong> ${formatDynamicValue(input.x0)}</p>
+      <p><strong>y₀:</strong> ${formatDynamicValue(input.y0)}</p>
+      <p><strong>x<sub>f</sub>:</strong> ${formatDynamicValue(input.xf)}</p>
+      <p><strong>h:</strong> ${formatDynamicValue(input.h)}</p>
+      <p><strong>Número de pasos:</strong> ${summary.steps ?? "N/A"}</p>
+    </div>
+  `;
+}
+
+function renderEDOFinalResult(data) {
+  const summary = data.summary || {};
+
+  return `
+    <div class="solution-box">
+      <h3>Resultado final</h3>
+      <p><strong>x final:</strong> ${formatDynamicValue(summary.final_x)}</p>
+      <p><strong>y(x<sub>f</sub>) aproximada:</strong> ${formatDynamicValue(summary.final_y)}</p>
+      <p><strong>Último paso ajustado:</strong> ${formatDynamicValue(summary.adjusted_last_step)}</p>
+    </div>
+  `;
+}

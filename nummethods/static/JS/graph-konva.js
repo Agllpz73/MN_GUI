@@ -83,7 +83,9 @@
   }
 
   function isIntegrationData(data) {
-    return data && (data.category === "integracion" || data.method === "trapecio");
+    return (
+      data && (data.category === "integracion" || data.method === "trapecio")
+    );
   }
 
   function fitIntegrationView(data) {
@@ -593,10 +595,14 @@
         integrationLayer.add(
           new Konva.Line({
             points: [
-              toScreenX(seg.x0), toScreenY(0),
-              toScreenX(seg.x0), toScreenY(seg.y0),
-              toScreenX(seg.x1), toScreenY(seg.y1),
-              toScreenX(seg.x1), toScreenY(0),
+              toScreenX(seg.x0),
+              toScreenY(0),
+              toScreenX(seg.x0),
+              toScreenY(seg.y0),
+              toScreenX(seg.x1),
+              toScreenY(seg.y1),
+              toScreenX(seg.x1),
+              toScreenY(0),
             ],
             closed: true,
             fill: "rgba(59,130,246,0.25)",
@@ -610,8 +616,10 @@
         integrationLayer.add(
           new Konva.Line({
             points: [
-              toScreenX(seg.x0), toScreenY(seg.y0),
-              toScreenX(seg.x1), toScreenY(seg.y1),
+              toScreenX(seg.x0),
+              toScreenY(seg.y0),
+              toScreenX(seg.x1),
+              toScreenY(seg.y1),
             ],
             stroke: "#dc2626",
             strokeWidth: 2,
@@ -625,8 +633,10 @@
         integrationLayer.add(
           new Konva.Line({
             points: [
-              toScreenX(seg.x0), toScreenY(0),
-              toScreenX(seg.x0), toScreenY(seg.y0),
+              toScreenX(seg.x0),
+              toScreenY(0),
+              toScreenX(seg.x0),
+              toScreenY(seg.y0),
             ],
             stroke: "#93c5fd",
             strokeWidth: 1,
@@ -637,8 +647,10 @@
         integrationLayer.add(
           new Konva.Line({
             points: [
-              toScreenX(seg.x1), toScreenY(0),
-              toScreenX(seg.x1), toScreenY(seg.y1),
+              toScreenX(seg.x1),
+              toScreenY(0),
+              toScreenX(seg.x1),
+              toScreenY(seg.y1),
             ],
             stroke: "#93c5fd",
             strokeWidth: 1,
@@ -649,6 +661,64 @@
     });
 
     integrationLayer.draw();
+  }
+
+  // Agregamos una función especial para dibujar EDO
+
+  function drawPath2D(points) {
+    pointsLayer.destroyChildren();
+
+    if (!points || points.length === 0) {
+      pointsLayer.draw();
+      return;
+    }
+
+    let linePoints = [];
+
+    points.forEach((p) => {
+      const x = Number(p.x);
+      const y = Number(p.y);
+
+      if (!isFinite(x) || !isFinite(y)) return;
+
+      const screenX = toScreenX(x);
+      const screenY = toScreenY(y);
+
+      linePoints.push(screenX, screenY);
+    });
+
+    if (linePoints.length >= 4) {
+      pointsLayer.add(
+        new Konva.Line({
+          points: linePoints,
+          stroke: "red",
+          strokeWidth: 2,
+          lineCap: "round",
+          lineJoin: "round",
+        }),
+      );
+    }
+
+    points.forEach((p) => {
+      const x = Number(p.x);
+      const y = Number(p.y);
+
+      if (!isFinite(x) || !isFinite(y)) return;
+
+      pointsLayer.add(
+        new Konva.Circle({
+          x: toScreenX(x),
+          y: toScreenY(y),
+          radius: 5,
+          fill: "red",
+          stroke: "black",
+          strokeWidth: 1,
+        }),
+      );
+    });
+
+    pointsLayer.moveToTop();
+    pointsLayer.draw();
   }
 
   /* =====================================================
@@ -666,6 +736,15 @@
       drawFunction();
       drawIntegrationSegments(data.plot_data?.segments || []);
       drawIterations(data.iterations || []);
+      return;
+    }
+    if (data.category === "edo") {
+      functionLayer.destroyChildren();
+      integrationLayer.destroyChildren();
+      functionLayer.draw();
+      integrationLayer.draw();
+
+      drawPath2D(data.points || []);
       return;
     }
 
@@ -764,6 +843,13 @@
       }
 
       fitIntegrationView(data);
+      redrawCurrentPlot();
+      return;
+    }
+
+    if (data.category === "edo") {
+      window.currentFunction = null;
+      integrationLayer.destroyChildren();
       redrawCurrentPlot();
       return;
     }

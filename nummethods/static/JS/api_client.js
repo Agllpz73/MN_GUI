@@ -741,7 +741,7 @@ async function solveSimpson13(event) {
     }
 
     const data = await response.json();
-    console.log("Datos Trapecio:", data);
+    console.log("Datos Simpson 1/3:", data);
 
     if (data.error || data.status === "error" || data.success === false) {
       alert(
@@ -758,7 +758,7 @@ async function solveSimpson13(event) {
       console.error("La función drawIntegrationGraph no está definida.");
     }
   } catch (error) {
-    console.error("Error en solveTrapecio:", error);
+    console.error("Error en solveSimpson13:", error);
     alert("Error al ejecutar el método de Simpson 1/3.");
   }
 }
@@ -792,7 +792,7 @@ async function solveSimpson38(event) {
     }
 
     const data = await response.json();
-    console.log("Datos Trapecio:", data);
+    console.log("Datos Simpson 3/8:", data);
 
     if (data.error || data.status === "error" || data.success === false) {
       alert(
@@ -859,8 +859,66 @@ async function solveCuadraturaGauss(event) {
       console.error("La función drawIntegrationGraph no está definida.");
     }
   } catch (error) {
-    console.error("Error en solveTrapecio:", error);
+    console.error("Error en solveCuadraturaGauss:", error);
     alert("Error al ejecutar el método de Cuadratura de Gauss.");
+  }
+}
+// Categoría EDO
+
+// Euler
+async function solveEuler(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+  const payload = {
+    function: formData.get("fxy"),
+    x0: parseFloat(formData.get("x0")),
+    y0: parseFloat(formData.get("y0")),
+    xf: parseFloat(formData.get("xf")),
+    h: parseFloat(formData.get("h")),
+  };
+
+  try {
+    const response = await fetch("/api/solve/euler", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      // body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error del servidor:", errorText);
+      alert("Error del servidor.");
+      return;
+    }
+
+    const data = await response.json();
+    console.log("Datos Euler:", data);
+
+    if (data.error || data.status === "error" || data.success === false) {
+      alert(
+        data.message || data.error || "Ocurrió un error al ejecutar Euler.",
+      );
+      return;
+    }
+
+    renderEDO(data);
+
+     if (window.drawNewtonGraph) {
+      window.drawNewtonGraph({
+        category: "edo",
+        method: data.method,
+        points: data.plot_data?.points || [],
+        iterations: data.iterations || []
+      });
+    } else {
+      console.error("La función drawIntegrationGraph no está definida.");
+    }
+  } catch (error) {
+    console.error("Error en solveEuler:", error);
+    alert("Error al ejecutar el método de Euler.");
   }
 }
 
@@ -920,6 +978,8 @@ document.addEventListener("DOMContentLoaded", function () {
       solveSimpson38(event);
     }else if (method === "cuadratura-gauss"){
       solveCuadraturaGauss(event);
-    } 
+    }else if (method === "euler") {
+      solveEuler(event);
+    }
   });
 });

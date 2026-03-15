@@ -21,6 +21,8 @@ from .methods.simpson_13 import solve_simpson_13
 from .methods.simpson_38 import solve_simpson_38
 from .methods.cuadratura_gauss import solve_cuadratura_gauss
 from .methods.euler import euler_method
+from .methods.euler_mejorado import euler_improved_method
+from .methods.runge_kutta import runge_kutta_method
 from .utils.parser import parse_matrix_csv, validate_augmented_matrix
 
 def solve(method_name, data):
@@ -284,6 +286,22 @@ def solve(method_name, data):
         )
     elif method_name == "euler":
         return euler_method(
+            function_str=data["function"],
+            x0=data["x0"],
+            y0=data["y0"],
+            xf=data["xf"],
+            h=data["h"]
+        )
+    elif method_name == "euler-mejorado":
+        return euler_improved_method(
+            function_str=data["function"],
+            x0=data["x0"],
+            y0=data["y0"],
+            xf=data["xf"],
+            h=data["h"]
+        )
+    elif method_name == "runge-kutta":
+        return runge_kutta_method(
             function_str=data["function"],
             x0=data["x0"],
             y0=data["y0"],

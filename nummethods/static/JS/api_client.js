@@ -922,6 +922,122 @@ async function solveEuler(event) {
   }
 }
 
+// Euler mejorado
+
+async function solveEulerMejorado(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+  const payload = {
+    function: formData.get("fxy"),
+    x0: parseFloat(formData.get("x0")),
+    y0: parseFloat(formData.get("y0")),
+    xf: parseFloat(formData.get("xf")),
+    h: parseFloat(formData.get("h")),
+  };
+
+  try {
+    const response = await fetch("/api/solve/euler-mejorado", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      // body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error del servidor:", errorText);
+      alert("Error del servidor.");
+      return;
+    }
+
+    const data = await response.json();
+    console.log("Datos Euler Mejorado:", data);
+
+    if (data.error || data.status === "error" || data.success === false) {
+      alert(
+        data.message || data.error || "Ocurrió un error al ejecutar Euler Mejorado.",
+      );
+      return;
+    }
+
+    renderEDO(data);
+
+     if (window.drawNewtonGraph) {
+      window.drawNewtonGraph({
+        category: "edo",
+        method: data.method,
+        points: data.plot_data?.points || [],
+        iterations: data.iterations || []
+      });
+    } else {
+      console.error("La función drawNewtonGraph no está definida.");
+    }
+  } catch (error) {
+    console.error("Error en solveEulerMejorado:", error);
+    alert("Error al ejecutar el método de Euler Mejorado.");
+  }
+}
+
+
+// Runge - Kutta
+
+async function solveRungeKutta(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("method-form");
+  const formData = new FormData(form);
+  const payload = {
+    function: formData.get("fxy"),
+    x0: parseFloat(formData.get("x0")),
+    y0: parseFloat(formData.get("y0")),
+    xf: parseFloat(formData.get("xf")),
+    h: parseFloat(formData.get("h")),
+  };
+
+  try {
+    const response = await fetch("/api/solve/runge-kutta", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      // body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Error del servidor:", errorText);
+      alert("Error del servidor.");
+      return;
+    }
+
+    const data = await response.json();
+    console.log("Datos Runge-Kutta:", data);
+
+    if (data.error || data.status === "error" || data.success === false) {
+      alert(
+        data.message || data.error || "Ocurrió un error al ejecutar Runge-Kutta.",
+      );
+      return;
+    }
+
+    renderEDO(data);
+
+     if (window.drawNewtonGraph) {
+      window.drawNewtonGraph({
+        category: "edo",
+        method: data.method,
+        points: data.plot_data?.points || [],
+        iterations: data.iterations || []
+      });
+    } else {
+      console.error("La función drawNewtonGraph no está definida.");
+    }
+  } catch (error) {
+    console.error("Error en solveRungeKutta:", error);
+    alert("Error al ejecutar el método de Runge-Kutta.");
+  }
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("method-form");
@@ -980,6 +1096,10 @@ document.addEventListener("DOMContentLoaded", function () {
       solveCuadraturaGauss(event);
     }else if (method === "euler") {
       solveEuler(event);
+    }else if (method === "euler-mejorado") {
+      solveEulerMejorado(event);
+    }else if (method === "runge-kutta") {
+      solveRungeKutta(event);
     }
   });
 });

@@ -1,12 +1,17 @@
-<form method="POST"  class="file-form" id="method-form" >
+<form method="POST" class="file-form" id="method-form">
   <label class="form-label">
     Número de ecuaciones:
-    <span class="help-icon">?</span>
+    <span
+      class="help-icon"
+      data-tooltip="Selecciona cuántas ecuaciones tendrá el sistema. Si eliges 2, se generarán campos para x y y. Si eliges 3, se agregarán campos para x, y y z."
+      tabindex="0"
+      >?</span
+    >
   </label>
 
   <select id="num-equations" name="num_eq" required>
     <option value="">Selecciona</option>
-    
+
     <option value="2">2 variables (x, y)</option>
     <option value="3">3 variables (x, y, z)</option>
   </select>
@@ -28,9 +33,9 @@
   <input type="number" name="max_iter" placeholder="ej. 20" required />
   <input type="hidden" name="method" value="newton-raphson-sistema" />
 
-  <button type="submit" class="primary-btn" >Iniciar</button>
+  <button type="submit" class="primary-btn">Iniciar</button>
 </form>
-<br>
+<br />
 <div class="method-card">
   <div class="method-card-header">
     <div class="method-card-icon">i</div>
@@ -45,25 +50,25 @@
   </p>
 </div>
 <script>
-document.getElementById("num-equations").addEventListener("change", function () {
+  document
+    .getElementById("num-equations")
+    .addEventListener("change", function () {
+      const n = parseInt(this.value);
+      const funcContainer = document.getElementById("functions-container");
+      const initContainer = document.getElementById("initial-values-container");
 
-    const n = parseInt(this.value);
-    const funcContainer = document.getElementById("functions-container");
-    const initContainer = document.getElementById("initial-values-container");
+      funcContainer.innerHTML = "";
+      initContainer.innerHTML = "";
 
-    funcContainer.innerHTML = "";
-    initContainer.innerHTML = "";
+      if (!n) return;
 
-    if (!n) return;
+      const variables = ["x", "y", "z"];
 
-    const variables = ["x", "y", "z"];
-
-    for (let i = 0; i < n; i++) {
-
+      for (let i = 0; i < n; i++) {
         // Funciones
         funcContainer.innerHTML += `
             <label class="form-label">
-                f${i+1}(${variables.slice(0,n).join(", ")}) =
+                f${i + 1}(${variables.slice(0, n).join(", ")}) =
             </label>
             <input
                 type="text"
@@ -86,6 +91,6 @@ document.getElementById("num-equations").addEventListener("change", function () 
                 required
             />
         `;
-    }
-});
+      }
+    });
 </script>

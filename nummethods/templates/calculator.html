@@ -21,8 +21,14 @@ endblock %} {% block content %}
 
   <!-- FILA INFERIOR -->
   <div class="calculator-bottom">
-    <section class="panel panel--results">
-      <h2 class="panel__title">Procedimientos</h2>
+    <section class="panel panel--results" id="results-panel">
+      <div class="panel__header panel__header--results">
+        <h2 class="panel__title">Procedimientos</h2>
+
+        <button type="button" id="toggle-results" class="expand-btn">
+          Expandir
+        </button>
+      </div>
       <div id="procedure-output"></div>
     </section>
 
@@ -41,5 +47,7 @@ endblock %} {% block content %}
     <div id="gauss-procedure-container"></div>
   </div>
 </div>
+<div id="global-tooltip" class="global-tooltip"></div>
 {% endblock %}
+
 

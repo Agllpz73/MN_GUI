@@ -38,6 +38,7 @@
         <a class="btn btn--primary" href="#" aria-label="Detalles">Detalles</a>
       </div>
     </header>
+    
 
     <main class="{% block main_class %}page{% endblock %}">
       {% block content %}{% endblock %}
@@ -49,6 +50,112 @@
     <script src="{{ url_for('static', filename='JS/plotter.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjs@11/lib/browser/math.js"></script>
     <script src="{{ url_for('static', filename='js/keyboard.js') }}"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const panel = document.getElementById("results-panel");
+        const button = document.getElementById("toggle-results");
 
+        if (!panel || !button) return;
+
+        button.addEventListener("click", () => {
+          panel.classList.toggle("expanded");
+
+          if (panel.classList.contains("expanded")) {
+            button.textContent = "Reducir";
+          } else {
+            button.textContent = "Expandir";
+          }
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const tooltip = document.getElementById("global-tooltip");
+        const helpIcons = document.querySelectorAll(".help-icon");
+
+        if (!tooltip) return;
+
+        function showTooltip(icon) {
+          const text = icon.dataset.tooltip;
+          if (!text) return;
+
+          tooltip.textContent = text;
+          tooltip.classList.add("is-visible");
+          tooltip.classList.remove("tooltip-left", "tooltip-right");
+
+          const rect = icon.getBoundingClientRect();
+
+          const tooltipWidth = 260;
+          const spacing = 12;
+
+          let left = rect.right + spacing;
+          let top = rect.top + window.scrollY - 4;
+
+          /* si no cabe a la derecha, mandarlo a la izquierda */
+          if (left + tooltipWidth > window.innerWidth - 12) {
+            left = rect.left - tooltipWidth - spacing;
+            tooltip.classList.add("tooltip-left");
+          } else {
+            tooltip.classList.add("tooltip-right");
+          }
+
+          /* si tampoco cabe a la izquierda, centrarlo arriba */
+          if (left < 12) {
+            left = 12;
+          }
+
+          /* evitar que se salga por abajo */
+          const tooltipHeight = tooltip.offsetHeight || 80;
+          const maxTop =
+            window.innerHeight + window.scrollY - tooltipHeight - 12;
+
+          if (top > maxTop) {
+            top = maxTop;
+          }
+
+          if (top < window.scrollY + 12) {
+            top = window.scrollY + 12;
+          }
+
+          tooltip.style.left = `${left}px`;
+          tooltip.style.top = `${top}px`;
+        }
+
+        function hideTooltip() {
+          tooltip.classList.remove(
+            "is-visible",
+            "tooltip-left",
+            "tooltip-right",
+          );
+        }
+
+        helpIcons.forEach((icon) => {
+          icon.addEventListener("mouseenter", () => showTooltip(icon));
+          icon.addEventListener("mouseleave", hideTooltip);
+          icon.addEventListener("focus", () => showTooltip(icon));
+          icon.addEventListener("blur", hideTooltip);
+
+          /* para móvil */
+          icon.addEventListener("click", (e) => {
+            e.stopPropagation();
+
+            if (tooltip.classList.contains("is-visible")) {
+              hideTooltip();
+            } else {
+              showTooltip(icon);
+            }
+          });
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!e.target.classList.contains("help-icon")) {
+            hideTooltip();
+          }
+        });
+
+        window.addEventListener("scroll", hideTooltip);
+        window.addEventListener("resize", hideTooltip);
+      });
+    </script>
   </body>
 </html>

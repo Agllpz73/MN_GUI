@@ -1206,3 +1206,142 @@ html, body{
     font-weight:bold;
     margin:0 10px;
 }
+
+/* =========================
+   FORMULARIOS DE MÉTODOS
+========================= */
+#method-form{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#method-form label{
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+#method-form input{
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+#method-form input:focus{
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+#method-form input::placeholder{
+  color: var(--muted);
+}
+
+#method-form button{
+  width: 100%;
+  height: 46px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s ease, transform .15s ease, box-shadow .2s ease;
+}
+
+#method-form button:hover{
+  background: #1d4ed8;
+}
+
+#method-form button:active{
+  transform: scale(0.98);
+}
+
+#method-form button:focus{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+/* =========================================
+   LAYOUT PRINCIPAL DE LA CALCULADORA
+========================================= */
+
+
+/* CONTENEDOR IZQUIERDO CON SCROLL */
+.left-stack{
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* PANEL DEL FORMULARIO */
+.panel--inputs{
+  min-height: fit-content;
+}
+
+/* Scroll visual */
+.left-stack::-webkit-scrollbar{
+  width: 8px;
+}
+
+.left-stack::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+.left-stack::-webkit-scrollbar-thumb{
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+.left-stack::-webkit-scrollbar-thumb:hover{
+  background: #94a3b8;
+} 
+.left-stack{
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.left-stack::-webkit-scrollbar{
+  width: 6px;
+}
+
+.left-stack::-webkit-scrollbar-thumb{
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.left-stack::-webkit-scrollbar-thumb:hover{
+  background: #94a3b8;
+}
+
+.calculator-bottom{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 22px;
+  margin-top: 18px;
+
+  /* mueve ligeramente todo el bloque hacia la izquierda */
+  transform: translateX(-70px);
+}
+
+
+
+

@@ -3,4 +3,3 @@ numpy
 pandas
 sympy
 gunicorn
-os

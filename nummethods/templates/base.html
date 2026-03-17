@@ -35,10 +35,49 @@
           {% endfor %}
         </nav>
 
-        <a class="btn btn--primary" href="#" aria-label="Detalles">Detalles</a>
+        <a
+          class="btn btn--primary"
+          href="#"
+          aria-label="Detalles"
+          id="open-details-btn"
+          >Detalles</a
+        >
       </div>
     </header>
-    
+    <div id="details-modal" class="details-modal">
+      <div class="details-modal__overlay" id="details-overlay"></div>
+
+      <div class="details-modal__content">
+        <button
+          class="details-modal__close"
+          id="details-close"
+          aria-label="Cerrar"
+        >
+          &times;
+        </button>
+
+        <div class="details-modal__header">
+          <h2 id="details-method-title">Detalles del método</h2>
+          <p id="details-method-subtitle">
+            Información general del método seleccionado
+          </p>
+        </div>
+
+        <div class="details-tabs">
+          <button class="details-tab active" data-tab="params">
+            Parámetros
+          </button>
+          <button class="details-tab" data-tab="errors">
+            Errores / Condiciones
+          </button>
+        </div>
+
+        <div class="details-body">
+          <div id="details-params" class="details-panel active"></div>
+          <div id="details-errors" class="details-panel"></div>
+        </div>
+      </div>
+    </div>
 
     <main class="{% block main_class %}page{% endblock %}">
       {% block content %}{% endblock %}
@@ -157,5 +196,6 @@
         window.addEventListener("resize", hideTooltip);
       });
     </script>
+    <script src="{{ url_for('static', filename='js/detalles_metodos.js') }}"></script>
   </body>
 </html>

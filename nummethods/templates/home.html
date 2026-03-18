@@ -1,7 +1,5 @@
-{% extends "base.html" %}
-{% block title %}NumMethods{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}NumMethods{% endblock %} {% block
+content %}
 <section class="hero">
   <h1 class="hero__title">NumMethods</h1>
   <p class="hero__subtitle">Sistema interactivo de métodos numéricos</p>
@@ -49,7 +47,10 @@
 </section>
 
 <section class="section section--muted">
-  <h2 class="section__title">Selecciona un método desde el menú superior para comenzar a explorar su comportamiento numérico y su proceso de convergencia.</h2>
+  <h2 class="section__title">
+    Selecciona un método desde el menú superior para comenzar a explorar su
+    comportamiento numérico y su proceso de convergencia.
+  </h2>
 
   <div class="usecases">
     <h3 class="usecases__title">Ejemplos de uso</h3>
@@ -60,7 +61,9 @@
       <li>Integración numérica y EDO</li>
     </ul>
 
-    <button class="btn btn--primary btn--wide" type="button">Comenzar</button>
+    <form action="{{ url_for('main.start') }}"  method="get">
+      <button class="btn btn--primary btn--wide" type="submit">Comenzar</button>
+    </form>
   </div>
 </section>
 
@@ -95,17 +98,24 @@
   <div class="footer__cols">
     <div>
       <h4>Proyecto</h4>
-      <p>NumMethods<br>Versión: v1.0<br>Año: 2026</p>
+      <p>NumMethods<br />Versión: v1.0<br />Año: 2026</p>
     </div>
     <div>
       <h4>Uso Académico</h4>
-      <p>Métodos numéricos<br>Visualización de convergencia<br>Análisis iterativo</p>
+      <p>
+        Métodos numéricos<br />Visualización de convergencia<br />Análisis
+        iterativo
+      </p>
     </div>
     <div>
       <h4>Información académica</h4>
-      <p>Proyecto Terminal<br>Ingeniería en Computación<br>UAM Azcapotzalco</p>
+      <p>
+        Proyecto Terminal<br />Ingeniería en Computación<br />UAM Azcapotzalco
+      </p>
     </div>
   </div>
-  <p class="footer__copy">© 2025 NumMethods — Proyecto académico con fines educativos.</p>
+  <p class="footer__copy">
+    © 2025 NumMethods — Proyecto académico con fines educativos.
+  </p>
 </footer>
 {% endblock %}

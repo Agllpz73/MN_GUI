@@ -256,3 +256,12 @@ def solve_api(method):
         return jsonify({
             "error": str(e)
         }), 400
+
+
+@main_bp.get("/start")
+def start():
+    return redirect(url_for(
+        "main.method_view",
+        category="ec-no-lineales",
+        method="biseccion"
+    ))

@@ -1,6 +1,6 @@
 from .methods.newton import solve_newton
 from .methods.biseccion import solve_biseccion
-from .methods.secante import solve_secante
+#from .methods.secante import solve_secante
 from .methods.falsa_posicion import solve_falsa_posicion
 from .methods.newton_sistemas import newton_system
 from .methods.punto_fijo_system import punto_fijo_system
@@ -23,6 +23,7 @@ from .methods.cuadratura_gauss import solve_cuadratura_gauss
 from .methods.euler import euler_method
 from .methods.euler_mejorado import euler_improved_method
 from .methods.runge_kutta import runge_kutta_method
+from .methods.secante import solve_secante
 from .utils.parser import parse_matrix_csv, validate_augmented_matrix
 
 def solve(method_name, data):

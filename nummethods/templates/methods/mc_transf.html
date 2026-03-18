@@ -1,7 +1,17 @@
-<form method="POST" enctype="multipart/form-data" class="file-form" id="method-form">
+<form
+  method="POST"
+  enctype="multipart/form-data"
+  class="file-form"
+  id="method-form"
+>
   <label class="form-label">
     Valores (x,y):
-    <span class="help-icon">?</span>
+    <span
+      class="help-icon"
+      data-tooltip="El archivo .CSV debe contener pares de datos (x,y). Cada fila representa un punto del conjunto de datos usado para construir la interpolación o aproximación."
+      tabindex="0"
+      >?</span
+    >
   </label>
 
   <!-- Input real oculto -->
@@ -23,7 +33,6 @@
   />
   <input type="hidden" name="method" value="mc-transf" />
 
-
   <button type="submit" class="primary-btn">Iniciar</button>
 </form>
 <br />
@@ -34,18 +43,13 @@
   </div>
 
   <p>
-    Mínimos Cuadrados con Transformaciones <strong>variante del método de mínimos
-    cuadrados</strong> que aplica transformaciones para ajustar modelos <strong>no lineales</strong>.
-    Permite aproximar datos mediante relaciones exponenciales, logarítmicas u
-    otras.
+    Mínimos Cuadrados con Transformaciones
+    <strong>variante del método de mínimos cuadrados</strong> que aplica
+    transformaciones para ajustar modelos <strong>no lineales</strong>. Permite
+    aproximar datos mediante relaciones exponenciales, logarítmicas u otras.
   </p>
 </div>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="file-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="file-{{ category }}">{{ message }}</div>
+{% endfor %} {% endif %} {% endwith %}

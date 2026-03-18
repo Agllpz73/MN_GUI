@@ -1,7 +1,17 @@
-<form method="POST" enctype="multipart/form-data" class="file-form" id="method-form">
+<form
+  method="POST"
+  enctype="multipart/form-data"
+  class="file-form"
+  id="method-form"
+>
   <label class="form-label">
     Sistema de ecuaciones:
-    <span class="help-icon">?</span>
+    <span
+      class="help-icon"
+      data-tooltip="El archivo .CSV debe contener la matriz aumentada [A|b]. El número de variables del sistema debe coincidir con la cantidad de valores iniciales seleccionados."
+      tabindex="0"
+      >?</span
+    >
   </label>
 
   <!-- Input real oculto -->
@@ -14,18 +24,14 @@
 
   <span id="file-name" class="file-name"></span>
 
-  <label class="form-label">
-    Número de valores iniciales:
-    
-  </label>
+  <label class="form-label"> Número de valores iniciales: </label>
   <select id="num-equations" name="num_eq" required>
     <option value="">Selecciona</option>
-    
+
     <option value="2">2 variables (x, y)</option>
     <option value="3">3 variables (x, y, z)</option>
   </select>
 
-  
   <div id="functions-container"></div>
 
   <div id="initial-values-container"></div>
@@ -53,38 +59,33 @@
   </div>
 
   <p>
-    Método iterativo que <strong>mejora la aproximación</strong>  de la <strong>solución</strong> utilizando los
-    <strong>más recientes calculados</strong>. Generalmente <strong>más rápido que
-    Jacobi</strong> bajo condiciones adecuadas.
+    Método iterativo que <strong>mejora la aproximación</strong> de la
+    <strong>solución</strong> utilizando los
+    <strong>más recientes calculados</strong>. Generalmente
+    <strong>más rápido que Jacobi</strong> bajo condiciones adecuadas.
   </p>
 </div>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="file-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="file-{{ category }}">{{ message }}</div>
+{% endfor %} {% endif %} {% endwith %}
 <script>
-document.getElementById("num-equations").addEventListener("change", function () {
+  document
+    .getElementById("num-equations")
+    .addEventListener("change", function () {
+      const n = parseInt(this.value);
 
-    const n = parseInt(this.value);
-    
-    const initContainer = document.getElementById("initial-values-container");
+      const initContainer = document.getElementById("initial-values-container");
 
-    //funcContainer.innerHTML = "";
-    initContainer.innerHTML = "";
+      //funcContainer.innerHTML = "";
+      initContainer.innerHTML = "";
 
-    if (!n) return;
+      if (!n) return;
 
-    const variables = ["x", "y", "z"];
+      const variables = ["x", "y", "z"];
 
-    for (let i = 0; i < n; i++) {
-
+      for (let i = 0; i < n; i++) {
         // Funciones
-        
 
         // Valores iniciales
         initContainer.innerHTML += `
@@ -99,6 +100,6 @@ document.getElementById("num-equations").addEventListener("change", function () 
                 required
             />
         `;
-    }
-});
+      }
+    });
 </script>

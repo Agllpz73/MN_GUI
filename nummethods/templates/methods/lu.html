@@ -1,7 +1,17 @@
-<form method="POST" enctype="multipart/form-data" class="file-form" id="method-form">
+<form
+  method="POST"
+  enctype="multipart/form-data"
+  class="file-form"
+  id="method-form"
+>
   <label class="form-label">
     Sistema de ecuaciones:
-    <span class="help-icon">?</span>
+    <span
+      class="help-icon"
+      data-tooltip="El archivo .CSV debe contener valores numéricos organizados como una matriz aumentada [A|b]. Las primeras columnas representan la matriz de coeficientes A y la última columna corresponde al vector de términos independientes."
+      tabindex="0"
+      >?</span
+    >
   </label>
 
   <!-- Input real oculto -->
@@ -13,7 +23,7 @@
   </label>
 
   <span id="file-name" class="file-name"></span>
-  <input type="hidden" name="method" value="lu">
+  <input type="hidden" name="method" value="lu" />
 
   <button type="submit" class="primary-btn">Iniciar</button>
 </form>
@@ -25,17 +35,12 @@
   </div>
 
   <p>
-    Método directo que factoriza la matriz en una <strong>matriz inferior y superior</strong>.
-    Permite resolver sistemas lineales de forma <strong>eficiente</strong> mediante la
-    sustitución.
+    Método directo que factoriza la matriz en una
+    <strong>matriz inferior y superior</strong>. Permite resolver sistemas
+    lineales de forma <strong>eficiente</strong> mediante la sustitución.
   </p>
 </div>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="file-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="file-{{ category }}">{{ message }}</div>
+{% endfor %} {% endif %} {% endwith %}

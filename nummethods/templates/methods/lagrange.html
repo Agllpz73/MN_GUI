@@ -1,7 +1,17 @@
-<form method="POST" enctype="multipart/form-data" class="file-form" id="method-form">
+<form
+  method="POST"
+  enctype="multipart/form-data"
+  class="file-form"
+  id="method-form"
+>
   <label class="form-label">
     Valores (x,y):
-    <span class="help-icon">?</span>
+    <span
+      class="help-icon"
+      data-tooltip="El archivo .CSV debe contener pares de datos (x,y). Cada fila representa un punto del conjunto de datos usado para construir la interpolación o aproximación."
+      tabindex="0"
+      >?</span
+    >
   </label>
 
   <!-- Input real oculto -->
@@ -15,7 +25,12 @@
   <span id="file-name" class="file-name"></span>
 
   <label class="form-label">Valor de interpolación:</label>
-  <input type="number" name="interpolation_value" placeholder="ej. 4.3" required />
+  <input
+    type="number"
+    name="interpolation_value"
+    placeholder="ej. 4.3"
+    required
+  />
   <input type="hidden" name="method" value="lagrange" />
 
   <button type="submit" class="primary-btn">Iniciar</button>
@@ -28,17 +43,13 @@
   </div>
 
   <p>
-    Método de interpolación que construye un <strong>polinomio único</strong> que pasa
-    exactamente por <strong>un conjunto de puntos dados</strong>. Es sencillo de aplicar, pero
+    Método de interpolación que construye un
+    <strong>polinomio único</strong> que pasa exactamente por
+    <strong>un conjunto de puntos dados</strong>. Es sencillo de aplicar, pero
     <strong>poco eficiente para grandes conjuntos de datos</strong>.
   </p>
 </div>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="file-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="file-{{ category }}">{{ message }}</div>
+{% endfor %} {% endif %} {% endwith %}

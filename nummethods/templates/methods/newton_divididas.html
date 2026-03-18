@@ -1,9 +1,17 @@
-
-
-<form method="POST" enctype="multipart/form-data" class="file-form" id="method-form">
+<form
+  method="POST"
+  enctype="multipart/form-data"
+  class="file-form"
+  id="method-form"
+>
   <label class="form-label">
     Valores (x,y):
-    <span class="help-icon">?</span>
+    <span
+      class="help-icon"
+      data-tooltip="El archivo .CSV debe contener pares de datos (x,y). Cada fila representa un punto del conjunto de datos usado para construir la interpolación o aproximación."
+      tabindex="0"
+      >?</span
+    >
   </label>
 
   <!-- Input real oculto -->
@@ -29,24 +37,19 @@
 </form>
 <br />
 <div class="method-card">
-  <div class="method-card-header">  
+  <div class="method-card-header">
     <div class="method-card-icon">i</div>
     <h3>Newton Diferencias Divididas</h3>
   </div>
 
   <p>
     Método de interpolación que utiliza diferencias divididas para construir el
-    polinomio interpolante de forma incremental.  Permite añadir nuevos puntos
+    polinomio interpolante de forma incremental. Permite añadir nuevos puntos
     sin recalcular todo el polinomio.
   </p>
 </div>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="file-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="file-{{ category }}">{{ message }}</div>
+{% endfor %} {% endif %} {% endwith %}

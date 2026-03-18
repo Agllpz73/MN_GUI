@@ -13,8 +13,10 @@
 
   <label>Iteraciones máximas:</label>
   <input type="number" name="max_iter" required />
+  <input type="hidden" name="method" value="secante" />
 
-  <button type="submit" onclick="solveSecante(event)">Calcular</button>
+
+  <button type="submit">Calcular</button>
 </form>
 <br/>
 <div class="method-card">

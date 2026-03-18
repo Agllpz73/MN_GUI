@@ -1,7 +1,17 @@
-<form method="POST" enctype="multipart/form-data" class="file-form" id="method-form">
+<form
+  method="POST"
+  enctype="multipart/form-data"
+  class="file-form"
+  id="method-form"
+>
   <label class="form-label">
     Valores (x,y):
-    <span class="help-icon">?</span>
+    <span
+      class="help-icon"
+      data-tooltip="El archivo .CSV debe contener pares de datos (x,y). Cada fila representa un punto del conjunto de datos usado para construir la interpolación o aproximación."
+      tabindex="0"
+      >?</span
+    >
   </label>
 
   <!-- Input real oculto -->
@@ -33,18 +43,13 @@
   </div>
 
   <p>
-    Método de aproximación que <strong>ajusta una función</strong> a un conjunto de datos
-    <strong>minimizando el error global</strong>. <strong>No interpola todos los puntos</strong>, sino que obtiene
-    una tendencia representativa.
+    Método de aproximación que <strong>ajusta una función</strong> a un conjunto
+    de datos <strong>minimizando el error global</strong>.
+    <strong>No interpola todos los puntos</strong>, sino que obtiene una
+    tendencia representativa.
   </p>
 </div>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="file-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="file-{{ category }}">{{ message }}</div>
+{% endfor %} {% endif %} {% endwith %}

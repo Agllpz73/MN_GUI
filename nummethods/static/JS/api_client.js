@@ -99,7 +99,21 @@ async function solveSecante(event) {
       body: JSON.stringify(payload),
     });
 
-    const data = await response.json();
+    console.log("Status secante:", response.status);
+
+    const text = await response.text();
+    console.log("Texto crudo secante:", text);
+
+    const data = JSON.parse(text);
+    console.log("JSON secante:", data);
+    console.log("Iteraciones:", data.iterations);
+    console.log("Function string:", data.function_str);
+    console.log("Dimension:", data.dimension);
+    console.log("Plot data:", data.plot_data);
+    console.log("Nuevo elementos:", data.debug_secante);
+
+
+    window.secanteData = data;
 
     if (data.error) {
       alert(data.error);
@@ -107,9 +121,13 @@ async function solveSecante(event) {
     }
 
     renderProcedure(data);
+
+    console.log("Antes de drawNewtonGraph");
     window.drawNewtonGraph(data);
+    console.log("Después de drawNewtonGraph");
+
   } catch (error) {
-    console.error(error);
+    console.error("Error en secante:", error);
     alert("Error de conexión con el servidor.");
   }
 }

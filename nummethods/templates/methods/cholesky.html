@@ -1,7 +1,17 @@
-<form method="POST" enctype="multipart/form-data" class="file-form" id="method-form">
+<form
+  method="POST"
+  enctype="multipart/form-data"
+  class="file-form"
+  id="method-form"
+>
   <label class="form-label">
     Sistema de ecuaciones:
-    <span class="help-icon">?</span>
+    <span
+      class="help-icon"
+      data-tooltip="El archivo .CSV debe contener una matriz aumentada [A|b]. Para Cholesky se utiliza únicamente la matriz A, la cual debe ser simétrica y definida positiva."
+      tabindex="0"
+      >?</span
+    >
   </label>
 
   <!-- Input real oculto -->
@@ -13,7 +23,7 @@
   </label>
 
   <span id="file-name" class="file-name"></span>
-  <input type="hidden" name="method" value="cholesky">
+  <input type="hidden" name="method" value="cholesky" />
 
   <button type="submit" class="primary-btn">Iniciar</button>
 </form>
@@ -25,17 +35,13 @@
   </div>
 
   <p>
-    Método de factorización aplicable a matrices <strong>simétricas y definidas
-    positivas</strong>. Reduce el <strong>costo</strong> computacional al descomponer la matriz en
-    factores triangulares.
+    Método de factorización aplicable a matrices
+    <strong>simétricas y definidas positivas</strong>. Reduce el
+    <strong>costo</strong> computacional al descomponer la matriz en factores
+    triangulares.
   </p>
 </div>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="file-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="file-{{ category }}">{{ message }}</div>
+{% endfor %} {% endif %} {% endwith %}

@@ -85,7 +85,7 @@
                 required
             />
             <label class="form-label">
-            ${variables[0]}${i + 1} or ${variables[1]}${i + 1} or ${variables[2]}${i + 1}:
+            ${variables[i]}:
             </label>
             <input type="text" name="variables" placeholder="Ej: x**2 + y - 4" required/> 
         `;
@@ -112,7 +112,7 @@
           funcContainer.innerHTML += `
             
             <label class="form-label">
-            ${variables[0]}${i + 1} or ${variables[1]}${i + 1} or ${variables[2]}${i + 1}:
+            ${variables[i]}:
             </label>
             <input type="text" name="variables" placeholder="Ej: x**2 + y - 4" required/> 
         `;

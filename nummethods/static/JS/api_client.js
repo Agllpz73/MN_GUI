@@ -280,7 +280,7 @@ async function solvePuntoFijoSystem(event) {
   }
 }
 
-// Inicia método para Sistemas de Ec. Lineales
+// Inicia método para Sistemas de Ec. Lineales ** Revisar
 
 async function solveGauss(event) {
   event.preventDefault();

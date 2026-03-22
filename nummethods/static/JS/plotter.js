@@ -2,7 +2,7 @@ function renderProcedure(data) {
   const container = document.getElementById("procedure-output");
   container.innerHTML = "";
 
-  if (!data.iterations || data.iterations.length === 0) {
+  if (!data.iterations || data.iterations.length === 0 ) {
     container.innerHTML = `<p style="color:red;">${data.message}</p>`;
     return;
   }

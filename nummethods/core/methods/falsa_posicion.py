@@ -8,7 +8,9 @@ def solve_falsa_posicion(function_str, a, b, tol, max_iter):
     fb = f(b)
 
     if fa * fb > 0:
-        raise ValueError("El intervalo inicial no es válido.")
+        return error_response( "El intervalo inicial no es válido.",
+            "f(a) y f(b) deben tener signos opuestos."
+            )
 
     iterations = []
 
@@ -49,5 +51,17 @@ def solve_falsa_posicion(function_str, a, b, tol, max_iter):
         "function_str": function_str,
         "method": "falsa_posicion",
         "message": "Máximo de iteraciones alcanzado.",
+        "dimension" : 1
+    }
+    
+    
+
+def error_response(title, detail):
+    return {
+        "method": "newton",
+        "root": None,
+        "iterations": [],
+        "converged": False,
+        "message": f"{title} {detail}",
         "dimension" : 1
     }

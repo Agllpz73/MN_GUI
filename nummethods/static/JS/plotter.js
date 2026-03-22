@@ -2,7 +2,7 @@ function renderProcedure(data) {
   const container = document.getElementById("procedure-output");
   container.innerHTML = "";
 
-  if (!data.iterations || data.iterations.length === 0 ) {
+  if (!data.iterations || data.iterations.length === 0) {
     container.innerHTML = `<p style="color:red;">${data.message}</p>`;
     return;
   }
@@ -86,7 +86,6 @@ function renderProcedureSystem(data) {
   container.innerHTML = table;
 }
 
-
 function openGaussModal() {
   const modal = document.getElementById("gauss-modal");
   const closeBtn = document.querySelector(".close-gauss");
@@ -108,6 +107,31 @@ function renderProcedureGauss(data) {
   const container = document.getElementById("gauss-procedure-container");
   container.innerHTML = "";
 
+  // =========================
+  // MANEJO DE ERRORES
+  // =========================
+  if (!data || data.status === "error") {
+    container.innerHTML = `
+      <div class="solution-box">
+        <h3>Error</h3>
+        <p style="color:red;">${data?.message || "Ocurrió un error al procesar el método de Gauss."}</p>
+      </div>
+    `;
+    openGaussModal();
+    return;
+  }
+
+  if (!data.iterations || data.iterations.length === 0) {
+    container.innerHTML = `
+      <div class="solution-box">
+        <h3>Aviso</h3>
+        <p style="color:red;">${data.message || "No hay iteraciones disponibles para mostrar."}</p>
+      </div>
+    `;
+    openGaussModal();
+    return;
+  }
+
   let html = `<div class="gauss-steps">`;
 
   data.iterations.forEach((matrix, step) => {
@@ -119,10 +143,12 @@ function renderProcedureGauss(data) {
       html += `<tr>`;
 
       row.forEach((value, index) => {
+        const num = Number(value);
+
         if (index === row.length - 1) {
-          html += `<td class="matrix-b">${value.toFixed(4)}</td>`;
+          html += `<td class="matrix-b">${Number.isFinite(num) ? num.toFixed(4) : value}</td>`;
         } else {
-          html += `<td>${value.toFixed(4)}</td>`;
+          html += `<td>${Number.isFinite(num) ? num.toFixed(4) : value}</td>`;
         }
       });
 
@@ -135,16 +161,27 @@ function renderProcedureGauss(data) {
 
   html += `</div>`;
 
-  html += `<div class="solution-box">`;
-  html += `<h3>Solución</h3>`;
+  // =========================
+  // SOLUCIÓN
+  // =========================
+  if (data.solution && data.solution.length > 0) {
+    html += `<div class="solution-box">`;
+    html += `<h3>Solución</h3>`;
 
-  const vars = ["x", "y", "z"];
+    const vars = ["x", "y", "z", "w", "v"];
 
-  data.solution.forEach((value, i) => {
-    html += `<p>${vars[i]} = <strong>${value.toFixed(6)}</strong></p>`;
-  });
+    data.solution.forEach((value, i) => {
+      const num = Number(value);
+      html += `<p>${vars[i] || `x${i + 1}`} = <strong>${Number.isFinite(num) ? num.toFixed(6) : value}</strong></p>`;
+    });
 
-  html += `</div>`;
+    html += `</div>`;
+  } else if (data.message) {
+    html += `<div class="solution-box">`;
+    html += `<h3>Resultado</h3>`;
+    html += `<p style="color:red;">${data.message}</p>`;
+    html += `</div>`;
+  }
 
   container.innerHTML = html;
 
@@ -157,6 +194,31 @@ function renderProcedureGaussJordan(data) {
   const container = document.getElementById("gauss-procedure-container");
   container.innerHTML = "";
 
+  // =========================
+  // MANEJO DE ERRORES
+  // =========================
+  if (!data || data.status === "error") {
+    container.innerHTML = `
+      <div class="solution-box">
+        <h3>Error</h3>
+        <p style="color:red;">${data?.message || "Ocurrió un error al procesar el método de Gauss-Jordan."}</p>
+      </div>
+    `;
+    openGaussModal();
+    return;
+  }
+
+  if (!data.iterations || data.iterations.length === 0) {
+    container.innerHTML = `
+      <div class="solution-box">
+        <h3>Aviso</h3>
+        <p style="color:red;">${data.message || "No hay pasos disponibles para mostrar."}</p>
+      </div>
+    `;
+    openGaussModal();
+    return;
+  }
+
   let html = `<div class="gauss-steps">`;
 
   data.iterations.forEach((step, index) => {
@@ -164,7 +226,6 @@ function renderProcedureGaussJordan(data) {
     const operation = step.operations;
 
     html += `<div class="gauss-step">`;
-
     html += `<h3>Paso ${index + 1}</h3>`;
 
     if (operation) {
@@ -177,10 +238,12 @@ function renderProcedureGaussJordan(data) {
       html += `<tr>`;
 
       row.forEach((value, colIndex) => {
+        const num = Number(value);
+
         if (colIndex === row.length - 1) {
-          html += `<td class="matrix-b">${value.toFixed(4)}</td>`;
+          html += `<td class="matrix-b">${Number.isFinite(num) ? num.toFixed(4) : value}</td>`;
         } else {
-          html += `<td>${value.toFixed(4)}</td>`;
+          html += `<td>${Number.isFinite(num) ? num.toFixed(4) : value}</td>`;
         }
       });
 
@@ -193,16 +256,27 @@ function renderProcedureGaussJordan(data) {
 
   html += `</div>`;
 
-  html += `<div class="solution-box">`;
-  html += `<h3>Solución</h3>`;
+  // =========================
+  // SOLUCIÓN
+  // =========================
+  if (data.solution && data.solution.length > 0) {
+    html += `<div class="solution-box">`;
+    html += `<h3>Solución</h3>`;
 
-  const vars = ["x", "y", "z"];
+    const vars = ["x", "y", "z", "w", "v"];
 
-  data.solution.forEach((value, i) => {
-    html += `<p>${vars[i]} = <strong>${value.toFixed(6)}</strong></p>`;
-  });
+    data.solution.forEach((value, i) => {
+      const num = Number(value);
+      html += `<p>${vars[i] || `x${i + 1}`} = <strong>${Number.isFinite(num) ? num.toFixed(6) : value}</strong></p>`;
+    });
 
-  html += `</div>`;
+    html += `</div>`;
+  } else if (data.message) {
+    html += `<div class="solution-box">`;
+    html += `<h3>Resultado</h3>`;
+    html += `<p style="color:red;">${data.message}</p>`;
+    html += `</div>`;
+  }
 
   container.innerHTML = html;
 
@@ -215,6 +289,31 @@ function renderProcedureMatrizInversa(data) {
   const container = document.getElementById("gauss-procedure-container");
   container.innerHTML = "";
 
+  // =========================
+  // MANEJO DE ERRORES
+  // =========================
+  if (!data || data.status === "error") {
+    container.innerHTML = `
+      <div class="solution-box">
+        <h3>Error</h3>
+        <p style="color:red;">${data?.message || "Ocurrió un error al procesar el método de matriz inversa."}</p>
+      </div>
+    `;
+    openGaussModal();
+    return;
+  }
+
+  if (!data.iterations || data.iterations.length === 0) {
+    container.innerHTML = `
+      <div class="solution-box">
+        <h3>Aviso</h3>
+        <p style="color:red;">${data.message || "No hay pasos disponibles para mostrar."}</p>
+      </div>
+    `;
+    openGaussModal();
+    return;
+  }
+
   let html = `<div class="gauss-steps">`;
 
   data.iterations.forEach((step, index) => {
@@ -222,7 +321,6 @@ function renderProcedureMatrizInversa(data) {
     const operation = step.operations;
 
     html += `<div class="gauss-step">`;
-
     html += `<h3>Paso ${index + 1}</h3>`;
 
     if (operation) {
@@ -235,10 +333,12 @@ function renderProcedureMatrizInversa(data) {
       html += `<tr>`;
 
       row.forEach((value, colIndex) => {
+        const num = Number(value);
+
         if (colIndex === row.length - 1) {
-          html += `<td class="matrix-b">${value.toFixed(4)}</td>`;
+          html += `<td class="matrix-b">${Number.isFinite(num) ? num.toFixed(4) : value}</td>`;
         } else {
-          html += `<td>${value.toFixed(4)}</td>`;
+          html += `<td>${Number.isFinite(num) ? num.toFixed(4) : value}</td>`;
         }
       });
 
@@ -251,55 +351,76 @@ function renderProcedureMatrizInversa(data) {
 
   html += `</div>`;
 
-  /* -------- PRODUCTO X = A⁻¹ B -------- */
+  // =========================
+  // RESULTADO FINAL
+  // =========================
+  if (
+    !data.inverse ||
+    !Array.isArray(data.inverse) ||
+    !data.vector_b ||
+    !Array.isArray(data.vector_b) ||
+    !data.solution ||
+    !Array.isArray(data.solution)
+  ) {
+    html += `
+      <div class="solution-box">
+        <h3>Resultado</h3>
+        <p style="color:red;">${data.message || "No se pudo construir el resultado final del método."}</p>
+      </div>
+    `;
+
+    container.innerHTML = html;
+    openGaussModal();
+    return;
+  }
 
   html += `<div class="solution-box">`;
   html += `<h3>Producto X = A⁻¹ B</h3>`;
-
   html += `<div class="matrix-product">`;
 
-  /* MATRIZ INVERSA */
+  // MATRIZ INVERSA
   html += `<table class="matrix-product-table">`;
 
   data.inverse.forEach((row) => {
     html += `<tr>`;
     row.forEach((value) => {
-      html += `<td>${value.toFixed(4)}</td>`;
+      const num = Number(value);
+      html += `<td>${Number.isFinite(num) ? num.toFixed(4) : value}</td>`;
     });
     html += `</tr>`;
   });
 
   html += `</table>`;
 
-  /* símbolo multiplicación */
+  // símbolo multiplicación
   html += `<span class="matrix-multiply">×</span>`;
 
-  /* VECTOR B */
+  // VECTOR B
   html += `<table class="matrix-product-table vector-b">`;
 
   data.vector_b.forEach((value) => {
+    const num = Number(value);
     html += `<tr>`;
-    html += `<td>${value.toFixed(4)}</td>`;
+    html += `<td>${Number.isFinite(num) ? num.toFixed(4) : value}</td>`;
     html += `</tr>`;
   });
 
   html += `</table>`;
+
   html += `<span class="matrix-multiply">=</span>`;
-  const vars = ["x", "y", "z"];
+
+  const vars = ["x", "y", "z", "w", "v"];
 
   html += `<table class="matrix-product-table vector-b">`;
 
   data.solution.forEach((value, i) => {
+    const num = Number(value);
     html += `<tr>`;
-    html += `<td>${vars[i]} = <strong>${value.toFixed(6)}</strong></td>`;
+    html += `<td>${vars[i] || `x${i + 1}`} = <strong>${Number.isFinite(num) ? num.toFixed(6) : value}</strong></td>`;
     html += `</tr>`;
   });
 
   html += `</table>`;
-  /*data.solution.forEach((value, i) => {
-    html += `<p>${vars[i]} = <strong>${value.toFixed(6)}</strong></p>`;
-  }); */
-
   html += `</div>`;
   html += `</div>`;
 
@@ -406,6 +527,14 @@ function renderFactorization(data) {
   } = data;
 
   let html = "";
+  if (!data || data.status === "error") {
+    return `
+    <div class="solution-box">
+      <h3>Error</h3>
+      <p style="color:red;">${data?.message || "Ocurrió un error en la factorización."}</p>
+    </div>
+  `;
+  }
 
   html += `<div class="solution-box">`;
   html += `<h3>Método de ${method}</h3>`;
@@ -760,7 +889,10 @@ function formatNumber(value) {
 
   if (!isFinite(num)) return value;
 
-  if (Math.abs(num) >= 100000 || (Math.abs(num) > 0 && Math.abs(num) < 0.0001)) {
+  if (
+    Math.abs(num) >= 100000 ||
+    (Math.abs(num) > 0 && Math.abs(num) < 0.0001)
+  ) {
     return num.toExponential(6);
   }
 
@@ -778,7 +910,7 @@ function formatIntegrationMethod(method) {
     trapecio: "Trapecio",
     simpson_13: "Simpson 1/3",
     simpson_38: "Simpson 3/8",
-    cuadratura_gauss: "Cuadratura de Gauss"
+    cuadratura_gauss: "Cuadratura de Gauss",
   };
 
   return methods[method] || method;
@@ -790,7 +922,7 @@ function formatSummaryKey(key) {
     weighted_sum: "Suma ponderada",
     evaluations: "Evaluaciones de la función",
     transformation: "Transformación",
-    interval_length: "Longitud del intervalo"
+    interval_length: "Longitud del intervalo",
   };
 
   return labels[key] || key;
@@ -805,10 +937,13 @@ function getIntegrationInterpretation(method) {
     simpson_38:
       "La aproximación se realiza por bloques de cuatro nodos, asignando pesos específicos para mejorar el ajuste del área bajo la curva.",
     cuadratura_gauss:
-      "La integral se aproxima evaluando la función en puntos estratégicos del intervalo con pesos óptimos, sin necesidad de una partición uniforme."
+      "La integral se aproxima evaluando la función en puntos estratégicos del intervalo con pesos óptimos, sin necesidad de una partición uniforme.",
   };
 
-  return interpretations[method] || "Se obtuvo una aproximación numérica del área bajo la curva.";
+  return (
+    interpretations[method] ||
+    "Se obtuvo una aproximación numérica del área bajo la curva."
+  );
 }
 
 // Render para mostrar pasos para métodos de EDO
@@ -836,8 +971,10 @@ function formatDynamicValue(value) {
     return `[ ${value
       .map((v) =>
         typeof v === "number"
-          ? (isFinite(v) ? v.toFixed(6) : String(v))
-          : String(v)
+          ? isFinite(v)
+            ? v.toFixed(6)
+            : String(v)
+          : String(v),
       )
       .join(", ")} ]`;
   }
@@ -862,7 +999,7 @@ function formatColumnName(column) {
     k1: "k1",
     k2: "k2",
     k3: "k3",
-    k4: "k4"
+    k4: "k4",
   };
 
   return labels[column] || column;

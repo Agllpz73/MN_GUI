@@ -295,12 +295,6 @@ async function solveGauss(event) {
       body: formData,
     });
 
-    /* const text = await response.text();
-
-    console.log("Respuesta cruda: ", text);
-
-    const data = JSON.parse(text);*/
-
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Error del servidor: ", errorText);

@@ -15,14 +15,16 @@ def matriz_inversa_gauss_jordan(matrix):
     if A.shape[0] != A.shape[1]:
         return {
             "status": "error",
-            "message": "La matriz debe ser cuadrada para calcular la inversa."
+            "message": "La matriz debe ser cuadrada para calcular la inversa.",
+            "iterations": []
         }
 
     # verificar determinante
     if abs(np.linalg.det(A)) < 1e-12:
         return {
             "status": "error",
-            "message": "La matriz no tiene inversa (determinante = 0)."
+            "message": "La matriz no tiene inversa (determinante = 0).",
+            "iterations": []
         }
 
     I = np.identity(n)
@@ -48,7 +50,8 @@ def matriz_inversa_gauss_jordan(matrix):
             if swap_row is None:
                 return {
                     "status": "error",
-                    "message": "No se encontró pivote válido."
+                    "message": "No se encontró pivote válido.",
+                    "iterations": steps
                 }
 
             AI[[i, swap_row]] = AI[[swap_row, i]]

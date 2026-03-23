@@ -659,79 +659,99 @@ function renderInterpolation(data) {
   const container = document.getElementById("procedure-output");
   container.innerHTML = "";
 
+  // =========================
+  // MANEJO DE ERRORES
+  // =========================
+  if (!data || data.status === "error") {
+    container.innerHTML = `
+      <div class="solution-box">
+        <h3>Error</h3>
+        <p style="color:red;">${data?.message || "Ocurrió un error al procesar la interpolación."}</p>
+      </div>
+    `;
+    return;
+  }
+
   let html = "";
 
   /* ---------------- DATOS ---------------- */
+  if (data.data && data.data.headers && data.data.rows) {
+    html += `<h3>Datos</h3>`;
+    html += `<table class="matrix-table">`;
 
-  html += `<h3>Datos</h3>`;
-  html += `<table class="matrix-table">`;
-
-  html += `<tr>`;
-  data.data.headers.forEach((h) => {
-    html += `<th>${h}</th>`;
-  });
-  html += `</tr>`;
-
-  data.data.rows.forEach((row) => {
     html += `<tr>`;
-    row.forEach((val) => {
-      html += `<td>${Number(val).toFixed(6)}</td>`;
+    data.data.headers.forEach((h) => {
+      html += `<th>${h}</th>`;
     });
     html += `</tr>`;
-  });
 
-  html += `</table>`;
-
-  /* ---------------- MODELO ---------------- */
-
-  html += `<h3>${data.model.title}</h3>`;
-  html += `<div class="math-box">${data.model.equation}</div>`;
-
-  /* ---------------- DESARROLLO ---------------- */
-
-  html += `<h3>${data.development.title}</h3>`;
-
-  if (data.development.steps) {
-    data.development.steps.forEach((step) => {
-      html += `<div class="method-step">`;
-      html += `<p>${step.expression}</p>`;
-      html += `</div>`;
-    });
-  }
-
-  if (data.development.tables) {
-    data.development.tables.forEach((table) => {
-      html += `<h4>${table.title}</h4>`;
-      html += `<table class="matrix-table">`;
-
+    data.data.rows.forEach((row) => {
       html += `<tr>`;
-      table.headers.forEach((h) => {
-        html += `<th>${h}</th>`;
+      row.forEach((val) => {
+        const num = Number(val);
+        html += `<td>${Number.isFinite(num) ? num.toFixed(6) : val}</td>`;
       });
       html += `</tr>`;
+    });
 
-      table.rows.forEach((row) => {
+    html += `</table>`;
+  }
+
+  /* ---------------- MODELO ---------------- */
+  if (data.model) {
+    html += `<h3>${data.model.title || "Modelo matemático"}</h3>`;
+    html += `<div class="math-box">${data.model.equation || ""}</div>`;
+  }
+
+  /* ---------------- DESARROLLO ---------------- */
+  if (data.development) {
+    html += `<h3>${data.development.title || "Desarrollo"}</h3>`;
+
+    if (data.development.steps && data.development.steps.length > 0) {
+      data.development.steps.forEach((step) => {
+        html += `<div class="method-step">`;
+        html += `<p>${step.expression || ""}</p>`;
+        html += `</div>`;
+      });
+    }
+
+    if (data.development.tables && data.development.tables.length > 0) {
+      data.development.tables.forEach((table) => {
+        html += `<h4>${table.title || ""}</h4>`;
+        html += `<table class="matrix-table">`;
+
         html += `<tr>`;
-        row.forEach((v) => {
-          html += `<td>${v}</td>`;
+        table.headers.forEach((h) => {
+          html += `<th>${h}</th>`;
         });
         html += `</tr>`;
-      });
 
-      html += `</table>`;
-    });
+        table.rows.forEach((row) => {
+          html += `<tr>`;
+          row.forEach((v) => {
+            html += `<td>${v}</td>`;
+          });
+          html += `</tr>`;
+        });
+
+        html += `</table>`;
+      });
+    }
   }
 
   /* ---------------- FUNCIÓN RESULTANTE ---------------- */
-
-  html += `<h3>${data.function.title}</h3>`;
-  html += `<div class="solution-box">${data.function.expression}</div>`;
+  if (data.function) {
+    html += `<h3>${data.function.title || "Función resultante"}</h3>`;
+    html += `<div class="solution-box">${data.function.expression || ""}</div>`;
+  }
 
   /* ---------------- EVALUACIÓN ---------------- */
-
   if (data.evaluation) {
+    const xVal = data.evaluation.x;
+    const resultVal = Number(data.evaluation.result);
+
     html += `<h3>Evaluación</h3>`;
-    html += `<p><strong>P(${data.evaluation.x}) = ${Number(data.evaluation.result).toFixed(6)}</strong></p>`;
+    html += `<p><strong>P(${xVal}) = ${Number.isFinite(resultVal) ? resultVal.toFixed(6) : data.evaluation.result}</strong></p>`;
   }
 
   container.innerHTML = html;

@@ -30,9 +30,12 @@ Se utiliza un Blueprint para organizar las rutas relacionadas con la funcionalid
 """
 main_bp = Blueprint("main", __name__)
 
-@main_bp.get("/")
+@main_bp.get("/home")
 def home():
     return render_template("home.html")
+@main_bp.get("/")
+def creditos():
+    return render_template("creditos.html")
 
 @main_bp.get("/ec-no-lineales")
 def non_linear_eq():

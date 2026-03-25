@@ -1695,3 +1695,87 @@ html, body{
   font-size: 13px;
   overflow-x: auto;
 }
+/* =========================
+   CRÉDITOS / RECONOCIMIENTOS
+========================= */
+
+.credits-page {
+  padding: 32px 20px 48px;
+}
+
+.credits-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.credits-hero {
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 32px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.credits-title {
+  margin: 0 0 10px;
+  font-size: clamp(1.8rem, 2vw, 2.5rem);
+  color: var(--text);
+}
+
+.credits-subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.credits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.credits-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.credits-card h2 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  font-size: 1.2rem;
+  color: var(--primary);
+}
+
+.credits-card p {
+  margin: 0 0 12px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.credits-card--full {
+  grid-column: 1 / -1;
+}
+
+.person-block p:last-child,
+.credits-card p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .credits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .credits-card--full {
+    grid-column: auto;
+  }
+
+  .credits-hero {
+    padding: 24px 18px;
+  }
+}
